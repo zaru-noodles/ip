@@ -8,6 +8,7 @@ public class Zaru {
 
     private static final List<String> tasks = new ArrayList<>();
 
+    /** Starts the chatbot, reads commands, and ends when the user enters {@code bye}. */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         
@@ -29,12 +30,14 @@ public class Zaru {
         }
     }
 
+    /** Reads one command from standard input and prints the response separator. */
     private static String inputMessage(Scanner scanner) {
         String msg = scanner.nextLine();
         System.out.println(LINE_SEPARATOR);
         return msg;
     }
 
+    /** Processes a command by adding a task, listing tasks, or ending the session. */
     private static void processMessage(String message) {
         message = message.trim();
         switch (message) {
@@ -47,6 +50,7 @@ public class Zaru {
         }
     }
 
+    /** Prints a chatbot message followed by the response separator. */
     private static void printMessage(String message) {
         System.out.println(message + "\n" + LINE_SEPARATOR);
     }
