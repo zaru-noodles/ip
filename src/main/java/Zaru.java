@@ -35,13 +35,12 @@ public class Zaru {
     private static String inputMessage(Scanner scanner) {
         String msg = scanner.nextLine();
         System.out.println(LINE_SEPARATOR);
-        return msg;
+        return msg.trim();
     }
 
     /** Processes a command by adding a task, listing tasks, or ending the session. */
     private static void processMessage(String message) {
-        message = message.trim();
-        String[] words = message.split(" ");
+        String[] words = message.split("\\s+");
         String command = words[0];
         String[] args = Arrays.copyOfRange(words, 1, words.length);
 
