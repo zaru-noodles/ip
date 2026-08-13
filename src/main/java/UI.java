@@ -21,6 +21,14 @@ public class UI {
         System.out.println(message + "\n" + LINE_SEPARATOR);
     }
 
+    public static void printAddTaskMessage(TaskList tasks) {
+        int n = tasks.size();
+        UI.sendMessage("Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+            tasks.getTaskString(n),
+            n,
+            n == 1 ? "" : "s"));
+    }
+
     /** Reads one command from standard input and prints the response separator. */
     public static String retrieveMessage() {
         String msg = scanner.nextLine();

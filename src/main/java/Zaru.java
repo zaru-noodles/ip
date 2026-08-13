@@ -37,6 +37,18 @@ public class Zaru {
             tasks.uncomplete(i);
             UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
         }
+        case "todo" -> {
+            tasks.add(new ToDo(data.arg));
+            UI.printAddTaskMessage(tasks);
+        }
+        case "deadline" -> {
+            tasks.add(new Deadline(data.arg, data.keyArgs.get("by")));
+            UI.printAddTaskMessage(tasks);
+        }
+        case "event" -> {
+            tasks.add(new Event(data.arg, data.keyArgs.get("from"), data.keyArgs.get("to")));
+            UI.printAddTaskMessage(tasks);
+        }
         }
     }
 }

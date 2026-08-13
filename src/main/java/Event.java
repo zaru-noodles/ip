@@ -10,6 +10,6 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[D]%s (from: %s) (to: %s)".formatted(super.toString(), from, to);
+        return "[E]%s (from: %s) (to: %s)".formatted(super.toString(), from, to);
     }
 }

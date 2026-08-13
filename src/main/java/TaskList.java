@@ -12,6 +12,10 @@ public class TaskList {
         tasks.add(task);
     }
 
+    public int size() {
+        return tasks.size();
+    }
+
     public void complete(int index) {
         tasks.get(index - 1).setCompleted(true);
     }
