@@ -37,10 +37,6 @@ public class Zaru {
             tasks.uncomplete(i);
             UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
         }
-        default -> {
-            tasks.add(new Task(message));
-            UI.sendMessage("added: " + message);
-        }
         }
     }
 }
