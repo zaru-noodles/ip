@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -6,7 +7,7 @@ import java.util.Scanner;
 public class Zaru {
     private static final String LINE_SEPARATOR = "____________________________________________________________";
 
-    private static final List<String> tasks = new ArrayList<>();
+    private static final TaskList tasks = new TaskList();
 
     /** Starts the chatbot, reads commands, and ends when the user enters {@code bye}. */
     public static void main(String[] args) {
@@ -40,11 +41,15 @@ public class Zaru {
     /** Processes a command by adding a task, listing tasks, or ending the session. */
     private static void processMessage(String message) {
         message = message.trim();
-        switch (message) {
+        String[] words = message.split(" ");
+        String command = words[0];
+        String[] args = Arrays.copyOfRange(words, 1, words.length);
+
+        switch (command.toLowerCase()) {
         case "bye" -> printMessage("Bye. Hope to see you again soon!");
-        case "list" -> printTasks();
+        case "list" -> printMessage(tasks.toString());
         default -> {
-            tasks.add(message);
+            tasks.add(new Task(message));
             printMessage("added: " + message);
         }
         }
@@ -53,22 +58,5 @@ public class Zaru {
     /** Prints a chatbot message followed by the response separator. */
     private static void printMessage(String message) {
         System.out.println(message + "\n" + LINE_SEPARATOR);
-    }
-
-    /** Prints all stored tasks in the order in which they were entered. */
-    private static void printTasks() {
-        if (tasks.isEmpty()) {
-            printMessage("There are no tasks yet.");
-            return;
-        }
-
-        StringBuilder taskList = new StringBuilder();
-        for (int i = 0; i < tasks.size(); i++) {
-            taskList.append(i + 1).append(". ").append(tasks.get(i));
-            if (i < tasks.size() - 1) {
-                taskList.append("\n");
-            }
-        }
-        printMessage(taskList.toString());
     }
 }
