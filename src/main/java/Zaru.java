@@ -53,6 +53,11 @@ public class Zaru {
             tasks.complete(i);
             printMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(i)));
         }
+        case "unmark" -> {
+            int i = Integer.parseInt(args[0]);
+            tasks.uncomplete(i);
+            printMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
+        }
         default -> {
             tasks.add(new Task(message));
             printMessage("added: " + message);

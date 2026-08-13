@@ -15,6 +15,11 @@ public class TaskList {
     public void complete(int index) {
         tasks.get(index - 1).setCompleted(true);
     }
+
+    public void uncomplete(int index) {
+        tasks.get(index - 1).setCompleted(false);
+    }
+
     public String getTaskString(int index) {
         return tasks.get(index - 1).toString();
     }
