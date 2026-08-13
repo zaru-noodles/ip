@@ -12,7 +12,7 @@ public class Zaru {
     /** Starts the chatbot, reads commands, and ends when the user enters {@code bye}. */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
+
         System.out.println(LINE_SEPARATOR);
 
         String banner = " _____                   \n"
@@ -40,20 +40,18 @@ public class Zaru {
 
     /** Processes a command by adding a task, listing tasks, or ending the session. */
     private static void processMessage(String message) {
-        String[] words = message.split("\\s+");
-        String command = words[0];
-        String[] args = Arrays.copyOfRange(words, 1, words.length);
+        Parser.ParsedMessage data = Parser.parseMessage(message);
 
-        switch (command.toLowerCase()) {
+        switch (data.command) {
         case "bye" -> printMessage("Bye. Hope to see you again soon!");
         case "list" -> printMessage(tasks.toString());
         case "mark" -> {
-            int i = Integer.parseInt(args[0]);
+            int i = Integer.parseInt(data.arg);
             tasks.complete(i);
             printMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(i)));
         }
         case "unmark" -> {
-            int i = Integer.parseInt(args[0]);
+            int i = Integer.parseInt(data.arg);
             tasks.uncomplete(i);
             printMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
         }
