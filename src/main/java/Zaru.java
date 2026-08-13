@@ -48,6 +48,11 @@ public class Zaru {
         switch (command.toLowerCase()) {
         case "bye" -> printMessage("Bye. Hope to see you again soon!");
         case "list" -> printMessage(tasks.toString());
+        case "mark" -> {
+            int i = Integer.parseInt(args[0]);
+            tasks.complete(i);
+            printMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(i)));
+        }
         default -> {
             tasks.add(new Task(message));
             printMessage("added: " + message);

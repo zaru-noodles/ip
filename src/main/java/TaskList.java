@@ -12,6 +12,13 @@ public class TaskList {
         tasks.add(task);
     }
 
+    public void complete(int index) {
+        tasks.get(index - 1).setCompleted(true);
+    }
+    public String getTaskString(int index) {
+        return tasks.get(index - 1).toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder taskList = new StringBuilder();
