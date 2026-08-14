@@ -27,13 +27,13 @@ public class Zaru {
         case "bye" -> UI.sendMessage("Bye. Hope to see you again soon!");
         case "list" -> UI.sendMessage(tasks.toString());
         case "mark" -> {
-            int i = parseTaskNumber(data.arg);
+            int i = parseNumber(data.arg);
             validateTaskNumber(i);
             tasks.complete(i);
             UI.sendMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(i)));
         }
         case "unmark" -> {
-            int i = parseTaskNumber(data.arg);
+            int i = parseNumber(data.arg);
             validateTaskNumber(i);
             tasks.uncomplete(i);
             UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
@@ -61,18 +61,18 @@ public class Zaru {
     }
 
     /**
-     * Converts a user-provided task number into an integer.
+     * Converts a user-provided number into an integer.
      *
-     * @param taskNumber Text entered after a mark or unmark command.
+     * @param num Text entered after a mark or unmark command.
      * @return The parsed task number.
      * @throws ZaruException If the text is missing or is not a whole number.
      */
-    private static int parseTaskNumber(String taskNumber) throws ZaruException {
-        validateNonEmpty(taskNumber, "Please provide a task number.");
+    private static int parseNumber(String num) throws ZaruException {
+        validateNonEmpty(num, "Please provide a number.");
         try {
-            return Integer.parseInt(taskNumber);
+            return Integer.parseInt(num);
         } catch (NumberFormatException e) {
-            throw new ZaruException("Task number must be a whole number.");
+            throw new ZaruException("Number %s must be a valid number.".formatted(num));
         }
     }
 
