@@ -38,6 +38,13 @@ public class Zaru {
             tasks.uncomplete(i);
             UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
         }
+        case "delete" -> {
+            int i = parseNumber(data.arg);
+            validateTaskNumber(i);
+            String tmp = tasks.getTaskString(i);
+            tasks.delete(i);
+            UI.sendMessage("I've deleted that task!\n%s".formatted(tmp));
+        }
         case "todo" -> {
             validateNonEmpty(data.arg, "The description of a todo cannot be empty.");
             tasks.add(new ToDo(data.arg));
