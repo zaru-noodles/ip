@@ -25,7 +25,13 @@ public class Zaru {
 
         switch (data.command) {
         case "bye" -> UI.sendMessage("Bye. Hope to see you again soon!");
-        case "list" -> UI.sendMessage(tasks.toString());
+        case "list" -> {
+            if (tasks.size() == 0) {
+                UI.sendMessage("You have no tasks!");
+            } else {
+                UI.sendMessage("Here are your tasks:\n%s".formatted(tasks));
+            }
+        }
         case "mark" -> {
             int i = parseNumber(data.arg);
             validateTaskNumber(i);
