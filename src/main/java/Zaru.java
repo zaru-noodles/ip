@@ -1,8 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-
 /** Entry point for the Zaru chatbot application. */
 public class Zaru {
     private static final TaskList tasks = new TaskList();
@@ -13,42 +8,96 @@ public class Zaru {
 
         while (true) {
             String message = UI.retrieveMessage();
-            processMessage(message);
-            if (message.equals("bye")) {
+            try {
+                processMessage(message);
+            } catch (ZaruException e) {
+                UI.sendMessage(e.getMessage());
+            }
+            if (message.equalsIgnoreCase("bye")) {
                 break;
             }
         }
     }
 
     /** Processes a command by adding a task, listing tasks, or ending the session. */
-    private static void processMessage(String message) {
+    private static void processMessage(String message) throws ZaruException {
         Parser.ParsedMessage data = Parser.parseMessage(message);
 
         switch (data.command) {
         case "bye" -> UI.sendMessage("Bye. Hope to see you again soon!");
         case "list" -> UI.sendMessage(tasks.toString());
         case "mark" -> {
-            int i = Integer.parseInt(data.arg);
+            int i = parseTaskNumber(data.arg);
+            validateTaskNumber(i);
             tasks.complete(i);
             UI.sendMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(i)));
         }
         case "unmark" -> {
-            int i = Integer.parseInt(data.arg);
+            int i = parseTaskNumber(data.arg);
+            validateTaskNumber(i);
             tasks.uncomplete(i);
             UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(i)));
         }
         case "todo" -> {
+            validateNonEmpty(data.arg, "The description of a todo cannot be empty.");
             tasks.add(new ToDo(data.arg));
             UI.printAddTaskMessage(tasks);
         }
         case "deadline" -> {
+            validateNonEmpty(data.arg, "The description of a deadline cannot be empty.");
+            validateNonEmpty(data.keyArgs.get("by"), "Please provide a deadline date using /by.");
             tasks.add(new Deadline(data.arg, data.keyArgs.get("by")));
             UI.printAddTaskMessage(tasks);
         }
         case "event" -> {
+            validateNonEmpty(data.arg, "The description of an event cannot be empty.");
+            validateNonEmpty(data.keyArgs.get("from"), "Please provide an event start time using /from.");
+            validateNonEmpty(data.keyArgs.get("to"), "Please provide an event end time using /to.");
             tasks.add(new Event(data.arg, data.keyArgs.get("from"), data.keyArgs.get("to")));
             UI.printAddTaskMessage(tasks);
         }
+        default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
+        }
+    }
+
+    /**
+     * Converts a user-provided task number into an integer.
+     *
+     * @param taskNumber Text entered after a mark or unmark command.
+     * @return The parsed task number.
+     * @throws ZaruException If the text is missing or is not a whole number.
+     */
+    private static int parseTaskNumber(String taskNumber) throws ZaruException {
+        validateNonEmpty(taskNumber, "Please provide a task number.");
+        try {
+            return Integer.parseInt(taskNumber);
+        } catch (NumberFormatException e) {
+            throw new ZaruException("Task number must be a whole number.");
+        }
+    }
+
+    /**
+     * Checks whether a task number refers to an existing task.
+     *
+     * @param taskNumber One-based task number entered by the user.
+     * @throws ZaruException If the number is outside the task list.
+     */
+    private static void validateTaskNumber(int taskNumber) throws ZaruException {
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw new ZaruException("Task number must be between 1 and %d!".formatted(tasks.size()));
+        }
+    }
+
+    /**
+     * Checks whether required command text is present.
+     *
+     * @param text Text to check.
+     * @param errorMessage Message to show if the text is missing.
+     * @throws ZaruException If the text is null or blank.
+     */
+    private static void validateNonEmpty(String text, String errorMessage) throws ZaruException {
+        if (text == null || text.isBlank()) {
+            throw new ZaruException(errorMessage);
         }
     }
 }
