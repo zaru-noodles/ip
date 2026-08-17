@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class TaskList {
+public class TaskList implements Iterable<Task> {
     private final List<Task> tasks;
 
     public TaskList() {
@@ -30,6 +31,11 @@ public class TaskList {
 
     public String getTaskString(int index) {
         return tasks.get(index - 1).toString();
+    }
+
+    @Override
+    public Iterator<Task> iterator() {
+        return tasks.iterator();
     }
 
     @Override
