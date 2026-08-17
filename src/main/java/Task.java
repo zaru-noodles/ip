@@ -2,9 +2,9 @@ public abstract class Task {
     private String title;
     private boolean completed;
 
-    public Task(String title) {
+    public Task(String title, boolean completed) {
         this.title = title;
-        this.completed = false;
+        this.completed = completed;
     }
 
     public String getTitle() {
