@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles loading tasks from and saving tasks to the hard disk.
@@ -23,8 +25,8 @@ public class Storage {
      * @return Task list restored from the save file, or an empty list if the file does not exist.
      * @throws ZaruException If the file cannot be read or contains invalid task data.
      */
-    public TaskList load() throws ZaruException {
-        TaskList res = new TaskList();
+    public List<Task> load() throws ZaruException {
+        List<Task> res = new ArrayList<>();
 
         if (!Files.exists(filePath)) {
             return res;
@@ -50,7 +52,7 @@ public class Storage {
      * @param tasks Task list to save.
      * @throws ZaruException If the save file cannot be written.
      */
-    public void save(TaskList tasks) throws ZaruException {
+    public void save(List<Task> tasks) throws ZaruException {
         StringBuilder contents = new StringBuilder();
 
         for (Task t : tasks) {
@@ -92,7 +94,7 @@ public class Storage {
      * @return Task represented by the line.
      * @throws ZaruException If the line does not match the expected save format.
      */
-    public Task fileStringToTask(String line) throws ZaruException {
+    private Task fileStringToTask(String line) throws ZaruException {
         String[] parts = line.split("\\s*\\|\\s*", -1);
         if (parts.length < 3) {
             throw new ZaruException("Invalid task data in save file!");

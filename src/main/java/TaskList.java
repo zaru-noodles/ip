@@ -2,40 +2,45 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TaskList implements Iterable<Task> {
-    private final List<Task> tasks;
+public class TaskList {
+    private List<Task> tasks;
+    private Storage storage;
 
-    public TaskList() {
+    public TaskList(Storage storage) {
+        this.storage = storage;
         this.tasks = new ArrayList<>();
     }
 
-    public void add(Task task) {
+    public void add(Task task) throws ZaruException {
         tasks.add(task);
+        storage.save(tasks);
     }
 
-    public void delete(int index) {
+    public void delete(int index) throws ZaruException {
         tasks.remove(index - 1);
+        storage.save(tasks);
     }
 
     public int size() {
         return tasks.size();
     }
 
-    public void complete(int index) {
+    public void complete(int index) throws ZaruException {
         tasks.get(index - 1).setCompleted(true);
+        storage.save(tasks);
     }
 
-    public void uncomplete(int index) {
+    public void uncomplete(int index) throws ZaruException {
         tasks.get(index - 1).setCompleted(false);
+        storage.save(tasks);
     }
 
     public String getTaskString(int index) {
         return tasks.get(index - 1).toString();
     }
 
-    @Override
-    public Iterator<Task> iterator() {
-        return tasks.iterator();
+    public void loadFromStorage() throws ZaruException {
+        tasks = storage.load();
     }
 
     @Override

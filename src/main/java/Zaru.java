@@ -1,10 +1,19 @@
+import java.nio.file.Path;
+
 /** Entry point for the Zaru chatbot application. */
 public class Zaru {
-    private static final TaskList tasks = new TaskList();
+    private static Storage storage = new Storage(Path.of("data", "zaru.txt"));
+    private static TaskList tasks = new TaskList(storage);
 
     /** Starts the chatbot, reads commands, and ends when the user enters {@code bye}. */
     public static void main(String[] args) {
         UI.printWelcomeMessage();
+
+        try {
+            tasks.loadFromStorage();
+        } catch (ZaruException e) {
+            UI.sendMessage("Error loading tasks from storage: %s".formatted(e.getMessage()));
+        }
 
         while (true) {
             String message = UI.retrieveMessage();
