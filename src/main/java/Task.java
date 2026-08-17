@@ -7,10 +7,6 @@ public abstract class Task {
         this.completed = completed;
     }
 
-    public Task(String title) {
-        this(title, false);
-    }
-
     public String getTitle() {
         return title;
     }
