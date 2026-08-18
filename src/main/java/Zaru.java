@@ -12,7 +12,7 @@ public class Zaru {
         try {
             tasks.loadFromStorage();
         } catch (ZaruException e) {
-            UI.sendMessage("Error loading tasks from storage: %s".formatted(e.getMessage()));
+            UI.sendError("Error loading tasks from storage: %s".formatted(e.getMessage()));
         }
 
         while (true) {
@@ -20,7 +20,7 @@ public class Zaru {
             try {
                 processMessage(message);
             } catch (ZaruException e) {
-                UI.sendMessage(e.getMessage());
+                UI.sendError(e.getMessage());
             }
             if (message.equalsIgnoreCase("bye")) {
                 break;
