@@ -1,27 +1,37 @@
-public class Event extends Task {
-    private String from;
-    private String to;
+import java.time.LocalDateTime;
 
-    public Event(String title, String from, String to) {
+public class Event extends Task {
+    private LocalDateTime from;
+    private LocalDateTime to;
+
+    public Event(String title, String from, String to) throws ZaruException {
         this(title, false, from, to);
     }
 
-    public Event(String title, boolean completed, String from, String to) {
+    public Event(String title, boolean completed, String from, String to) throws ZaruException {
+        this(title, completed, DateTimeParser.parse(from), DateTimeParser.parse(to));
+    }
+
+    public Event(String title, LocalDateTime from, LocalDateTime to) {
+        this(title, false, from, to);
+    }
+
+    public Event(String title, boolean completed, LocalDateTime from, LocalDateTime to) {
         super(title, completed);
         this.from = from;
         this.to = to;
     }
 
-    public String getFrom() {
+    public LocalDateTime getFrom() {
         return from;
     }
 
-    public String getTo() {
+    public LocalDateTime getTo() {
         return to;
     }
 
     @Override
     public String toString() {
-        return "[E]%s (from: %s) (to: %s)".formatted(super.toString(), from, to);
+        return "[E]%s (from: %s) (to: %s)".formatted(super.toString(), DateTimeParser.format(from), DateTimeParser.format(to));
     }
 }
