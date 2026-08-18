@@ -80,9 +80,9 @@ public class Storage {
         return switch (task) {
             case ToDo toDo -> "T | %s | %s".formatted(completed, toDo.getTitle());
             case Deadline deadline ->
-                    "D | %s | %s | %s".formatted(completed, deadline.getTitle(), deadline.getDueDate());
+                    "D | %s | %s | %s".formatted(completed, deadline.getTitle(), DateTimeParser.formatForStorage(deadline.getDueDate()));
             case Event event -> "E | %s | %s | %s | %s".formatted(
-                    completed, event.getTitle(), event.getFrom(), event.getTo());
+                    completed, event.getTitle(), DateTimeParser.formatForStorage(event.getFrom()), DateTimeParser.formatForStorage(event.getTo()));
             default -> throw new ZaruException("Unknown task type!");
         };
     }
