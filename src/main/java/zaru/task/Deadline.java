@@ -1,4 +1,9 @@
+package zaru.task;
+
 import java.time.LocalDateTime;
+
+import zaru.parser.DateTimeParser;
+import zaru.exception.ZaruException;
 
 public class Deadline extends Task {
     private LocalDateTime dueDate;

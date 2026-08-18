@@ -1,4 +1,8 @@
+package zaru.parser;
+
 import java.util.HashMap;
+
+import zaru.exception.ZaruException;
 
 /**
  * Parses raw user input into a command, main argument, and optional keyed arguments.

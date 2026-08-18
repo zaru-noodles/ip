@@ -1,3 +1,5 @@
+package zaru.task;
+
 public abstract class Task {
     private String title;
     private boolean completed;

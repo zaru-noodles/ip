@@ -1,6 +1,17 @@
+package zaru;
+
 import java.nio.file.Path;
 
-/** Entry point for the Zaru chatbot application. */
+import zaru.exception.ZaruException;
+import zaru.parser.Parser;
+import zaru.storage.Storage;
+import zaru.task.Deadline;
+import zaru.task.Event;
+import zaru.task.TaskList;
+import zaru.task.ToDo;
+import zaru.ui.UI;
+
+/** Entry point for the zaru.Zaru chatbot application. */
 public class Zaru {
     private static Storage storage = new Storage(Path.of("data", "zaru.txt"));
     private static TaskList tasks = new TaskList(storage);
@@ -106,7 +117,7 @@ public class Zaru {
      */
     private static void validateTaskNumber(int taskNumber) throws ZaruException {
         if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new ZaruException("Task number must be between 1 and %d!".formatted(tasks.size()));
+            throw new ZaruException("zaru.task.Task number must be between 1 and %d!".formatted(tasks.size()));
         }
     }
 

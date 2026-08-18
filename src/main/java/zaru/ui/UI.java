@@ -1,4 +1,8 @@
+package zaru.ui;
+
 import java.util.Scanner;
+
+import zaru.task.TaskList;
 
 public class UI {
     private static final String LINE_SEPARATOR = "____________________________________________________________";

@@ -1,4 +1,9 @@
+package zaru.task;
+
 import java.time.LocalDateTime;
+
+import zaru.parser.DateTimeParser;
+import zaru.exception.ZaruException;
 
 public class Event extends Task {
     private LocalDateTime from;

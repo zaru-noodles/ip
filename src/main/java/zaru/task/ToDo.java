@@ -1,3 +1,5 @@
+package zaru.task;
+
 public class ToDo extends Task {
     public ToDo(String title, boolean completed) {
         super(title, completed);
