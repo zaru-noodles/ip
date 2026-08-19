@@ -1,0 +1,79 @@
+package zaru.command;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import zaru.exception.ZaruException;
+import zaru.storage.Storage;
+import zaru.task.TaskList;
+
+/** Tests command execution that changes task-list state. */
+public class CommandTest {
+    @TempDir
+    Path temporaryDirectory;
+
+    @Test
+    public void todoCommand_execute_addsTask() throws ZaruException {
+        TaskList tasks = createTaskList("todo.txt");
+
+        new TodoCommand("read book").execute(tasks);
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] read book", tasks.getTaskString(1));
+    }
+
+    @Test
+    public void deadlineCommand_execute_addsDeadline() throws ZaruException {
+        TaskList tasks = createTaskList("deadline.txt");
+
+        new DeadlineCommand("submit report", "2026-08-19 1430").execute(tasks);
+
+        assertEquals(1, tasks.size());
+        assertEquals("[D][ ] submit report (by: Aug 19 2026, 2:30PM)", tasks.getTaskString(1));
+    }
+
+    @Test
+    public void eventCommand_execute_addsEvent() throws ZaruException {
+        TaskList tasks = createTaskList("event.txt");
+
+        new EventCommand("project meeting", "2026-08-20 1000", "2026-08-20 1100").execute(tasks);
+
+        assertEquals(1, tasks.size());
+        assertEquals("[E][ ] project meeting (from: Aug 20 2026, 10:00AM) (to: Aug 20 2026, 11:00AM)",
+                tasks.getTaskString(1));
+    }
+
+    @Test
+    public void markUnmarkDeleteCommands_execute_updatesTaskList() throws ZaruException {
+        TaskList tasks = createTaskList("state-changes.txt");
+        new TodoCommand("read book").execute(tasks);
+
+        new MarkCommand("1").execute(tasks);
+        assertEquals("[T][x] read book", tasks.getTaskString(1));
+
+        new UnmarkCommand("1").execute(tasks);
+        assertEquals("[T][ ] read book", tasks.getTaskString(1));
+
+        new DeleteCommand("1").execute(tasks);
+        assertEquals(0, tasks.size());
+    }
+
+    @Test
+    public void deadlineCommand_missingDueDate_throwsException() {
+        TaskList tasks = createTaskList("invalid-deadline.txt");
+
+        ZaruException exception = assertThrows(ZaruException.class,
+                () -> new DeadlineCommand("submit report", null).execute(tasks));
+
+        assertEquals("Please provide a deadline date using /by.", exception.getMessage());
+    }
+
+    private TaskList createTaskList(String fileName) {
+        return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
+    }
+}
