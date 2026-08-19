@@ -2,51 +2,29 @@ package zaru.parser;
 
 import java.util.HashMap;
 
+import zaru.command.ByeCommand;
+import zaru.command.Command;
+import zaru.command.DeadlineCommand;
+import zaru.command.DeleteCommand;
+import zaru.command.EventCommand;
+import zaru.command.ListCommand;
+import zaru.command.MarkCommand;
+import zaru.command.TodoCommand;
+import zaru.command.UnmarkCommand;
 import zaru.exception.ZaruException;
 
 /**
- * Parses raw user input into a command, main argument, and optional keyed arguments.
+ * Parses raw user input into an executable command.
  */
 public class Parser {
     /**
-     * Represents the parsed form of one user command.
-     */
-    public static class ParsedMessage {
-        public String command;
-        public String arg;
-        public HashMap<String, String> keyArgs;
-
-        /**
-         * Creates a parsed message with a command and its main argument.
-         *
-         * @param command Command word entered by the user.
-         * @param arg Text that appears after the command word.
-         */
-        public ParsedMessage(String command, String arg) {
-            this.command = command.toLowerCase();
-            this.arg = arg;
-            this.keyArgs = new HashMap<>();
-        }
-
-        /**
-         * Stores an argument introduced by a slash-prefixed keyword.
-         *
-         * @param key Keyword such as {@code by}, {@code from}, or {@code to}.
-         * @param value Text belonging to the keyword.
-         */
-        public void addKeyArg(String key, String value) {
-            keyArgs.put(key, value);
-        }
-    }
-
-    /**
-     * Parses a raw command line into command data.
+     * Parses a raw command line into an executable command.
      *
      * @param message Raw user input.
-     * @return Parsed command data.
+     * @return Command represented by the input.
      * @throws ZaruException If the user input is empty or contains a malformed keyed argument.
      */
-    public static ParsedMessage parseMessage(String message) throws ZaruException {
+    public static Command parseMessage(String message) throws ZaruException {
         message = message.trim();
         if (message.isEmpty()) {
             throw new ZaruException("Pwease enter a command!");
@@ -54,14 +32,18 @@ public class Parser {
 
         String[] blocks = message.split("\\s*/\\s*");
 
-        ParsedMessage res;
+        String command;
+        String arg;
         int i = blocks[0].indexOf(' ');
         if (i == -1) {
-            res = new ParsedMessage(blocks[0], "");
+            command = blocks[0].toLowerCase();
+            arg = "";
         } else {
-            res = new ParsedMessage(blocks[0].substring(0, i), blocks[0].substring(i + 1));
+            command = blocks[0].substring(0, i).toLowerCase();
+            arg = blocks[0].substring(i + 1);
         }
 
+        HashMap<String, String> keyArgs = new HashMap<>();
         for (int j = 1; j < blocks.length; j++) {
             i = blocks[j].indexOf(' ');
             if (i == -1) {
@@ -69,9 +51,19 @@ public class Parser {
             }
             String key = blocks[j].substring(0, i);
             String value = blocks[j].substring(i + 1);
-            res.addKeyArg(key, value);
+            keyArgs.put(key, value);
         }
 
-        return res;
+        return switch (command) {
+        case "bye" -> new ByeCommand();
+        case "list" -> new ListCommand();
+        case "mark" -> new MarkCommand(arg);
+        case "unmark" -> new UnmarkCommand(arg);
+        case "delete" -> new DeleteCommand(arg);
+        case "todo" -> new TodoCommand(arg);
+        case "deadline" -> new DeadlineCommand(arg, keyArgs.get("by"));
+        case "event" -> new EventCommand(arg, keyArgs.get("from"), keyArgs.get("to"));
+        default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
+        };
     }
 }
