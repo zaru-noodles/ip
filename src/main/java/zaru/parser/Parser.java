@@ -7,6 +7,7 @@ import zaru.command.Command;
 import zaru.command.DeadlineCommand;
 import zaru.command.DeleteCommand;
 import zaru.command.EventCommand;
+import zaru.command.FindCommand;
 import zaru.command.ListCommand;
 import zaru.command.MarkCommand;
 import zaru.command.TodoCommand;
@@ -63,6 +64,7 @@ public class Parser {
         case "todo" -> new TodoCommand(arg);
         case "deadline" -> new DeadlineCommand(arg, keyArgs.get("by"));
         case "event" -> new EventCommand(arg, keyArgs.get("from"), keyArgs.get("to"));
+        case "find" -> new FindCommand(arg);
         default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
         };
     }

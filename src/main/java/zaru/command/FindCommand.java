@@ -1,6 +1,9 @@
 package zaru.command;
 
+import java.util.List;
+
 import zaru.exception.ZaruException;
+import zaru.task.Task;
 import zaru.task.TaskList;
 import zaru.ui.UI;
 
@@ -25,6 +28,14 @@ public class FindCommand extends Command {
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(target, "Include a search target!");
-        UI.sendMessage("Meow! Here are the matching tasks in your list:\n%s".formatted(tasks.filter(target)));
+        StringBuilder sb = new StringBuilder();
+        List<Task> filteredTaskList = tasks.filterByTitle(target);
+
+        for (Task task : filteredTaskList) {
+            sb.append("   ").append(task.toString()).append("\n");
+        }
+
+        UI.sendMessage("Meow! Here are the matching tasks in your list:\n%s".formatted(sb));
+
     }
 }

@@ -47,6 +47,22 @@ public class TaskList {
         tasks = storage.load();
     }
 
+    /**
+    * Filters the task list by title.
+    * @param target The target string to filter by.
+     */
+    public List<Task> filterByTitle(String target) {
+        List<Task> filteredTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.getTitle().toLowerCase().contains(target.toLowerCase())) {
+                filteredTasks.add(task);
+            }
+        }
+
+        return filteredTasks;
+    }
+
     @Override
     public String toString() {
         StringBuilder taskList = new StringBuilder();
