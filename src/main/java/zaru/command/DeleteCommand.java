@@ -23,11 +23,11 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         String deletedTask = tasks.getTaskString(index);
         tasks.delete(index);
-        ui.sendMessage("I've deleted that task!\n%s".formatted(deletedTask));
+        UI.sendMessage("I've deleted that task!\n%s".formatted(deletedTask));
     }
 }

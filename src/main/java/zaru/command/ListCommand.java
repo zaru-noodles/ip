@@ -12,11 +12,11 @@ public class ListCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         if (tasks.size() == 0) {
-            ui.sendMessage("You have no tasks!");
+            UI.sendMessage("You have no tasks!");
         } else {
-            ui.sendMessage("Here are your tasks:\n%s".formatted(tasks));
+            UI.sendMessage("Here are your tasks:\n%s".formatted(tasks));
         }
     }
 }

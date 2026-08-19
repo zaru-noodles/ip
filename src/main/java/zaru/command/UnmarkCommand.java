@@ -23,10 +23,10 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         tasks.uncomplete(index);
-        ui.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(index)));
+        UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(index)));
     }
 }

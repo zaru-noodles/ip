@@ -30,11 +30,11 @@ public class EventCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of an event cannot be empty.");
         validateNonEmpty(from, "Please provide an event start time using /from.");
         validateNonEmpty(to, "Please provide an event end time using /to.");
         tasks.add(new Event(description, from, to));
-        ui.printAddTaskMessage(tasks);
+        UI.printAddTaskMessage(tasks);
     }
 }

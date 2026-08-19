@@ -27,10 +27,10 @@ public class DeadlineCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a deadline cannot be empty.");
         validateNonEmpty(dueDate, "Please provide a deadline date using /by.");
         tasks.add(new Deadline(description, dueDate));
-        ui.printAddTaskMessage(tasks);
+        UI.printAddTaskMessage(tasks);
     }
 }

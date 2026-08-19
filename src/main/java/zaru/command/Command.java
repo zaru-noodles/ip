@@ -2,7 +2,6 @@ package zaru.command;
 
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
-import zaru.ui.UI;
 
 public abstract class Command {
     /**
@@ -13,13 +12,12 @@ public abstract class Command {
     public abstract String getCommand();
 
     /**
-     * Executes this command using the application task list and user interface.
+     * Executes this command using the application task list.
      *
      * @param tasks Current task list.
-     * @param ui User interface used to display responses.
      * @throws ZaruException If command arguments or task operations are invalid.
      */
-    public abstract void execute(TaskList tasks, UI ui) throws ZaruException;
+    public abstract void execute(TaskList tasks) throws ZaruException;
 
     /**
      * Converts a user-provided number into an integer.
@@ -54,7 +52,7 @@ public abstract class Command {
      *
      * @param text Text to check.
      * @param errorMessage Message to show if the text is missing.
-     * @throws ZaruException If the text is null or blank.
+     *
      */
     protected static void validateNonEmpty(String text, String errorMessage) throws ZaruException {
         if (text == null || text.isBlank()) {

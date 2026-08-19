@@ -24,9 +24,9 @@ public class TodoCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a todo cannot be empty.");
         tasks.add(new ToDo(description));
-        ui.printAddTaskMessage(tasks);
+        UI.printAddTaskMessage(tasks);
     }
 }

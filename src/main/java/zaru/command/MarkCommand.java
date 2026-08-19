@@ -23,10 +23,10 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
+    public void execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         tasks.complete(index);
-        ui.sendMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(index)));
+        UI.sendMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(index)));
     }
 }

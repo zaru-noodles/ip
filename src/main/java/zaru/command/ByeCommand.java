@@ -12,7 +12,7 @@ public class ByeCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, UI ui) throws ZaruException {
-        ui.sendMessage("Bye. Hope to see you again soon!");
+    public void execute(TaskList tasks) throws ZaruException {
+        UI.sendMessage("Bye. Hope to see you again soon!");
     }
 }
