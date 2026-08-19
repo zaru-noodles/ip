@@ -64,8 +64,8 @@ public class Storage {
     public void save(List<Task> tasks) throws ZaruException {
         StringBuilder contents = new StringBuilder();
 
-        for (Task t : tasks) {
-            contents.append(taskToFileString(t)).append(System.lineSeparator());
+        for (Task task : tasks) {
+            contents.append(taskToFileString(task)).append(System.lineSeparator());
         }
 
         try {

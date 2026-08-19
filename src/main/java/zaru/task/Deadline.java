@@ -2,8 +2,8 @@ package zaru.task;
 
 import java.time.LocalDateTime;
 
-import zaru.parser.DateTimeParser;
 import zaru.exception.ZaruException;
+import zaru.parser.DateTimeParser;
 
 /** Represents a task that must be completed by a specified date and time. */
 public class Deadline extends Task {
@@ -24,12 +24,12 @@ public class Deadline extends Task {
      * Creates a deadline from user-entered date text.
      *
      * @param title Task description.
-     * @param completed Whether the task is already complete.
+     * @param isCompleted Whether the task is already complete.
      * @param dueDate Date text in an accepted date-time format.
      * @throws ZaruException If the date text is invalid.
      */
-    public Deadline(String title, boolean completed, String dueDate) throws ZaruException {
-        this(title, completed, DateTimeParser.parse(dueDate));
+    public Deadline(String title, boolean isCompleted, String dueDate) throws ZaruException {
+        this(title, isCompleted, DateTimeParser.parse(dueDate));
     }
 
     /**
@@ -46,11 +46,11 @@ public class Deadline extends Task {
      * Creates a deadline from a parsed date and time.
      *
      * @param title Task description.
-     * @param completed Whether the task is already complete.
+     * @param isCompleted Whether the task is already complete.
      * @param dueDate Parsed due date and time.
      */
-    public Deadline(String title, boolean completed, LocalDateTime dueDate) {
-        super(title, completed);
+    public Deadline(String title, boolean isCompleted, LocalDateTime dueDate) {
+        super(title, isCompleted);
         this.dueDate = dueDate;
     }
 

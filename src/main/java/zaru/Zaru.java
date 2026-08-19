@@ -7,10 +7,7 @@ import zaru.command.Command;
 import zaru.exception.ZaruException;
 import zaru.parser.Parser;
 import zaru.storage.Storage;
-import zaru.task.Deadline;
-import zaru.task.Event;
 import zaru.task.TaskList;
-import zaru.task.ToDo;
 import zaru.ui.UI;
 
 /** Entry point for the zaru.Zaru chatbot application. */
@@ -18,7 +15,11 @@ public class Zaru {
     private static Storage storage = new Storage(Path.of("data", "zaru.txt"));
     private static TaskList tasks = new TaskList(storage);
 
-    /** Starts the chatbot, reads commands, and ends when the user enters {@code bye}. */
+    /**
+     * Starts the chatbot, reads commands, and ends when the user enters {@code bye}.
+     *
+     * @param args Command-line arguments, which are not used.
+     */
     public static void main(String[] args) {
         UI.printWelcomeMessage();
 

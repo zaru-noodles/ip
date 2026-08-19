@@ -7,7 +7,7 @@ import zaru.task.TaskList;
 /** Handles console input and output for the chatbot. */
 public class UI {
     private static final String LINE_SEPARATOR = "____________________________________________________________";
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     /** Prints the chatbot banner and introductory prompt. */
     public static void printWelcomeMessage() {
@@ -49,9 +49,13 @@ public class UI {
             n == 1 ? "" : "s"));
     }
 
-    /** Reads one command from standard input and prints the response separator. */
+    /**
+     * Reads one command from standard input and prints the response separator.
+     *
+     * @return Trimmed command entered by the user.
+     */
     public static String retrieveMessage() {
-        String msg = scanner.nextLine();
+        String msg = SCANNER.nextLine();
         System.out.println(LINE_SEPARATOR);
         return msg.trim();
     }

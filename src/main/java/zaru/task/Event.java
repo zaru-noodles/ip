@@ -2,8 +2,8 @@ package zaru.task;
 
 import java.time.LocalDateTime;
 
-import zaru.parser.DateTimeParser;
 import zaru.exception.ZaruException;
+import zaru.parser.DateTimeParser;
 
 /** Represents a task that occurs between a specified start and end time. */
 public class Event extends Task {
@@ -26,13 +26,13 @@ public class Event extends Task {
      * Creates an event from user-entered time text.
      *
      * @param title Task description.
-     * @param completed Whether the task is already complete.
+     * @param isCompleted Whether the task is already complete.
      * @param from Event start time text.
      * @param to Event end time text.
      * @throws ZaruException If either time text is invalid.
      */
-    public Event(String title, boolean completed, String from, String to) throws ZaruException {
-        this(title, completed, DateTimeParser.parse(from), DateTimeParser.parse(to));
+    public Event(String title, boolean isCompleted, String from, String to) throws ZaruException {
+        this(title, isCompleted, DateTimeParser.parse(from), DateTimeParser.parse(to));
     }
 
     /**
@@ -50,12 +50,12 @@ public class Event extends Task {
      * Creates an event from parsed times.
      *
      * @param title Task description.
-     * @param completed Whether the task is already complete.
+     * @param isCompleted Whether the task is already complete.
      * @param from Event start time.
      * @param to Event end time.
      */
-    public Event(String title, boolean completed, LocalDateTime from, LocalDateTime to) {
-        super(title, completed);
+    public Event(String title, boolean isCompleted, LocalDateTime from, LocalDateTime to) {
+        super(title, isCompleted);
         this.from = from;
         this.to = to;
     }
@@ -85,6 +85,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]%s (from: %s) (to: %s)".formatted(super.toString(), DateTimeParser.format(from), DateTimeParser.format(to));
+        return "[E]%s (from: %s) (to: %s)".formatted(
+                super.toString(), DateTimeParser.format(from), DateTimeParser.format(to));
     }
 }

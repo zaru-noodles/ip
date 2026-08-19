@@ -20,11 +20,22 @@ public class FindCommand extends Command {
         this.target = target;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code find} command word.
+     */
     @Override
     public String getCommand() {
         return "find";
     }
 
+    /**
+     * Finds tasks whose titles contain the requested search text.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If the search text is empty.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(target, "Include a search target!");

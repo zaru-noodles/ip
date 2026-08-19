@@ -6,10 +6,10 @@ public class ToDo extends Task {
      * Creates a todo task with an explicit completion state.
      *
      * @param title Task description.
-     * @param completed Whether the task is already complete.
+     * @param isCompleted Whether the task is already complete.
      */
-    public ToDo(String title, boolean completed) {
-        super(title, completed);
+    public ToDo(String title, boolean isCompleted) {
+        super(title, isCompleted);
     }
 
     /**

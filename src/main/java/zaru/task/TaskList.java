@@ -3,8 +3,8 @@ package zaru.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import zaru.storage.Storage;
 import zaru.exception.ZaruException;
+import zaru.storage.Storage;
 
 /** Manages the current tasks and persists changes through a storage helper. */
 public class TaskList {
@@ -94,8 +94,10 @@ public class TaskList {
     }
 
     /**
-    * Filters the task list by title.
-    * @param target The target string to filter by.
+     * Filters the task list by title.
+     *
+     * @param target The target string to filter by.
+     * @return Tasks whose titles contain the target string, ignoring case.
      */
     public List<Task> filterByTitle(String target) {
         List<Task> filteredTasks = new ArrayList<>();
