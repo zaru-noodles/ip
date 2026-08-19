@@ -18,6 +18,7 @@ _temp/
 
 # Codex files
 .codex-tmp
+.agents
 
 # zaru data files
 data/
