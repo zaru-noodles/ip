@@ -11,6 +11,7 @@ import zaru.command.Command;
 import zaru.command.DeadlineCommand;
 import zaru.command.DeleteCommand;
 import zaru.command.EventCommand;
+import zaru.command.FindCommand;
 import zaru.command.ListCommand;
 import zaru.command.MarkCommand;
 import zaru.command.TodoCommand;
@@ -31,6 +32,7 @@ public class ParserTest {
         assertInstanceOf(DeadlineCommand.class, Parser.parseMessage("deadline submit report /by 2026-12-10"));
         assertInstanceOf(EventCommand.class,
                 Parser.parseMessage("event project meeting /from 2026-12-10 1000 /to 2026-12-10 1100"));
+        assertInstanceOf(FindCommand.class, Parser.parseMessage("find read book"));
     }
 
     /** Verifies that command names are trimmed and normalized to lower case. */

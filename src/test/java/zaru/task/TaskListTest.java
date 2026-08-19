@@ -45,6 +45,42 @@ public class TaskListTest {
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
     }
 
+    /** Verifies that filtering returns tasks whose titles contain the target text. */
+    @Test
+    public void filterByTitle_matchingTitles_returnsMatchingTasks() throws ZaruException {
+        TaskList tasks = createTaskList("filter-matches.txt");
+        tasks.add(new ToDo("read book"));
+        tasks.add(new ToDo("return book"));
+        tasks.add(new ToDo("watch movie"));
+
+        List<Task> matchingTasks = tasks.filterByTitle("book");
+
+        assertEquals(2, matchingTasks.size());
+        assertEquals("read book", matchingTasks.get(0).getTitle());
+        assertEquals("return book", matchingTasks.get(1).getTitle());
+    }
+
+    /** Verifies that filtering ignores differences in letter case. */
+    @Test
+    public void filterByTitle_differentLetterCase_returnsMatchingTasks() throws ZaruException {
+        TaskList tasks = createTaskList("filter-case.txt");
+        tasks.add(new ToDo("Read Book"));
+
+        List<Task> matchingTasks = tasks.filterByTitle("book");
+
+        assertEquals(1, matchingTasks.size());
+        assertEquals("Read Book", matchingTasks.get(0).getTitle());
+    }
+
+    /** Verifies that filtering returns an empty list when no title matches. */
+    @Test
+    public void filterByTitle_noMatchingTitles_returnsEmptyList() throws ZaruException {
+        TaskList tasks = createTaskList("filter-empty.txt");
+        tasks.add(new ToDo("read book"));
+
+        assertEquals(List.of(), tasks.filterByTitle("exercise"));
+    }
+
     /** Verifies that saved tasks are loaded into a task list. */
     @Test
     public void loadFromStorage_savedTasks_populatesList() throws ZaruException {
