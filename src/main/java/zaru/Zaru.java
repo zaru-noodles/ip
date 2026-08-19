@@ -92,45 +92,4 @@ public class Zaru {
         default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
         }
     }
-
-    /**
-     * Converts a user-provided number into an integer.
-     *
-     * @param num Text entered after a mark or unmark command.
-     * @return The parsed task number.
-     * @throws ZaruException If the text is missing or is not a whole number.
-     */
-    private static int parseNumber(String num) throws ZaruException {
-        validateNonEmpty(num, "Please provide a number.");
-        try {
-            return Integer.parseInt(num);
-        } catch (NumberFormatException e) {
-            throw new ZaruException("Number %s must be a valid number.".formatted(num));
-        }
-    }
-
-    /**
-     * Checks whether a task number refers to an existing task.
-     *
-     * @param taskNumber One-based task number entered by the user.
-     * @throws ZaruException If the number is outside the task list.
-     */
-    private static void validateTaskNumber(int taskNumber) throws ZaruException {
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new ZaruException("zaru.task.Task number must be between 1 and %d!".formatted(tasks.size()));
-        }
-    }
-
-    /**
-     * Checks whether required command text is present.
-     *
-     * @param text Text to check.
-     * @param errorMessage Message to show if the text is missing.
-     * @throws ZaruException If the text is null or blank.
-     */
-    private static void validateNonEmpty(String text, String errorMessage) throws ZaruException {
-        if (text == null || text.isBlank()) {
-            throw new ZaruException(errorMessage);
-        }
-    }
 }
