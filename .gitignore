@@ -16,6 +16,9 @@ bin/
 # Temp files
 _temp/
 
+# Codex files
+.codex-tmp
+
 # zaru data files
 data/
 
