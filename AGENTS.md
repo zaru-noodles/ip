@@ -24,6 +24,15 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Java coding standard
+
+All Java source and test code must follow the project skill at
+`.agents/skills/seedu-java-coding-standard/SKILL.md`, based on the
+[SE-EDU Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html).
+This includes naming, four-space indentation, K&R braces, explicit imports, a 120-character hard line limit,
+braces around all loop and conditional bodies, and accurate Javadocs for all classes and non-private methods plus
+non-trivial private methods.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
