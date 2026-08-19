@@ -18,11 +18,22 @@ public class TodoCommand extends Command {
         this.description = description;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code todo} command word.
+     */
     @Override
     public String getCommand() {
         return "todo";
     }
 
+    /**
+     * Validates and adds the todo task, then displays the updated task list.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If the todo description is empty or adding fails.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a todo cannot be empty.");

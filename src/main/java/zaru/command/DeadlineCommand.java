@@ -21,11 +21,22 @@ public class DeadlineCommand extends Command {
         this.dueDate = dueDate;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code deadline} command word.
+     */
     @Override
     public String getCommand() {
         return "deadline";
     }
 
+    /**
+     * Validates and adds the deadline task, then displays the updated task list.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If required text or the deadline date is invalid.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a deadline cannot be empty.");

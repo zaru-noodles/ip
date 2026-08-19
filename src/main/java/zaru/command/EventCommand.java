@@ -24,11 +24,22 @@ public class EventCommand extends Command {
         this.to = to;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code event} command word.
+     */
     @Override
     public String getCommand() {
         return "event";
     }
 
+    /**
+     * Validates and adds the event task, then displays the updated task list.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If required text or either event time is invalid.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of an event cannot be empty.");

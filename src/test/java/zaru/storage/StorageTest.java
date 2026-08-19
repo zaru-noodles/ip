@@ -25,6 +25,7 @@ public class StorageTest {
     @TempDir
     Path temporaryDirectory;
 
+    /** Verifies that all supported task types survive a save/load round trip. */
     @Test
     public void saveAndLoad_allTaskTypes_roundTrip() throws ZaruException {
         Path saveFile = temporaryDirectory.resolve("tasks.txt");
@@ -57,6 +58,7 @@ public class StorageTest {
         assertEquals(LocalDateTime.of(2026, 8, 20, 11, 0), loadedEvent.getTo());
     }
 
+    /** Verifies that starting without a save file yields an empty task list. */
     @Test
     public void load_missingFile_returnsEmptyList() throws ZaruException {
         Storage storage = new Storage(temporaryDirectory.resolve("missing.txt"));
@@ -64,6 +66,7 @@ public class StorageTest {
         assertTrue(storage.load().isEmpty());
     }
 
+    /** Verifies that malformed saved task data is rejected. */
     @Test
     public void load_malformedTask_throwsException() throws Exception {
         Path saveFile = temporaryDirectory.resolve("malformed.txt");

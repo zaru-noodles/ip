@@ -17,6 +17,7 @@ public class CommandTest {
     @TempDir
     Path temporaryDirectory;
 
+    /** Verifies that executing a todo command adds an incomplete todo task. */
     @Test
     public void todoCommand_execute_addsTask() throws ZaruException {
         TaskList tasks = createTaskList("todo.txt");
@@ -27,6 +28,7 @@ public class CommandTest {
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
     }
 
+    /** Verifies that executing a deadline command adds a deadline task. */
     @Test
     public void deadlineCommand_execute_addsDeadline() throws ZaruException {
         TaskList tasks = createTaskList("deadline.txt");
@@ -37,6 +39,7 @@ public class CommandTest {
         assertEquals("[D][ ] submit report (by: Aug 19 2026, 2:30PM)", tasks.getTaskString(1));
     }
 
+    /** Verifies that executing an event command adds an event task. */
     @Test
     public void eventCommand_execute_addsEvent() throws ZaruException {
         TaskList tasks = createTaskList("event.txt");
@@ -48,6 +51,7 @@ public class CommandTest {
                 tasks.getTaskString(1));
     }
 
+    /** Verifies that mark, unmark, and delete commands update task state. */
     @Test
     public void markUnmarkDeleteCommands_execute_updatesTaskList() throws ZaruException {
         TaskList tasks = createTaskList("state-changes.txt");
@@ -63,6 +67,7 @@ public class CommandTest {
         assertEquals(0, tasks.size());
     }
 
+    /** Verifies that a deadline without a due date is rejected. */
     @Test
     public void deadlineCommand_missingDueDate_throwsException() {
         TaskList tasks = createTaskList("invalid-deadline.txt");
@@ -73,6 +78,7 @@ public class CommandTest {
         assertEquals("Please provide a deadline date using /by.", exception.getMessage());
     }
 
+    /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
     }
