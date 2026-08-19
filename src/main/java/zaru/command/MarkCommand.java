@@ -17,11 +17,22 @@ public class MarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code mark} command word.
+     */
     @Override
     public String getCommand() {
         return "mark";
     }
 
+    /**
+     * Marks the selected task as complete and displays the updated task.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If the task number is invalid or marking fails.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);

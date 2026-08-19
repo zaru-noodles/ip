@@ -17,11 +17,22 @@ public class DeleteCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Returns the command word represented by this command.
+     *
+     * @return The {@code delete} command word.
+     */
     @Override
     public String getCommand() {
         return "delete";
     }
 
+    /**
+     * Validates the task number, removes the selected task, and displays it.
+     *
+     * @param tasks Current task list.
+     * @throws ZaruException If the task number is invalid or deletion fails.
+     */
     @Override
     public void execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);

@@ -3,6 +3,7 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
+/** Defines the common contract and validation helpers for user commands. */
 public abstract class Command {
     /**
      * Returns the command word represented by this command.
@@ -38,6 +39,7 @@ public abstract class Command {
     /**
      * Checks whether a task number refers to an existing task.
      *
+     * @param tasks Current task list.
      * @param taskNumber One-based task number entered by the user.
      * @throws ZaruException If the number is outside the task list.
      */
@@ -52,7 +54,7 @@ public abstract class Command {
      *
      * @param text Text to check.
      * @param errorMessage Message to show if the text is missing.
-     *
+     * @throws ZaruException If the text is null or blank.
      */
     protected static void validateNonEmpty(String text, String errorMessage) throws ZaruException {
         if (text == null || text.isBlank()) {

@@ -16,6 +16,7 @@ public class TaskListTest {
     @TempDir
     Path temporaryDirectory;
 
+    /** Verifies that adding and deleting tasks updates list contents and size. */
     @Test
     public void addAndDelete_tasks_updatesListContents() throws ZaruException {
         TaskList tasks = createTaskList("tasks.txt");
@@ -31,6 +32,7 @@ public class TaskListTest {
         assertEquals("[T][ ] return book", tasks.getTaskString(1));
     }
 
+    /** Verifies that completion state can be toggled for a task. */
     @Test
     public void completeAndUncomplete_task_updatesCompletionState() throws ZaruException {
         TaskList tasks = createTaskList("completion.txt");
@@ -43,6 +45,7 @@ public class TaskListTest {
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
     }
 
+    /** Verifies that saved tasks are loaded into a task list. */
     @Test
     public void loadFromStorage_savedTasks_populatesList() throws ZaruException {
         Storage storage = new Storage(temporaryDirectory.resolve("saved.txt"));
@@ -55,6 +58,7 @@ public class TaskListTest {
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
     }
 
+    /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
     }
