@@ -35,10 +35,10 @@ public class Storage {
      * @throws ZaruException If the file cannot be read or contains invalid task data.
      */
     public List<Task> load() throws ZaruException {
-        List<Task> res = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         if (!Files.exists(filePath)) {
-            return res;
+            return tasks;
         }
 
         try {
@@ -46,13 +46,13 @@ public class Storage {
                 if (line.isBlank()) {
                     continue;
                 }
-                res.add(fileStringToTask(line));
+                tasks.add(fileStringToTask(line));
             }
         } catch (IOException e) {
             throw new ZaruException("Failed to load tasks from file!");
         }
 
-        return res;
+        return tasks;
     }
 
     /**
@@ -84,14 +84,20 @@ public class Storage {
      * @throws ZaruException If the task type is not supported by the save format.
      */
     private String taskToFileString(Task task) throws ZaruException {
-        String completed = task.isCompleted() ? "1" : "0";
+        String completionMarker = task.isCompleted() ? "1" : "0";
 
         return switch (task) {
-            case ToDo toDo -> "T | %s | %s".formatted(completed, toDo.getTitle());
+            case ToDo toDo -> "T | %s | %s".formatted(completionMarker, toDo.getTitle());
             case Deadline deadline ->
-                    "D | %s | %s | %s".formatted(completed, deadline.getTitle(), DateTimeParser.formatForStorage(deadline.getDueDate()));
+                    "D | %s | %s | %s".formatted(
+                            completionMarker,
+                            deadline.getTitle(),
+                            DateTimeParser.formatForStorage(deadline.getDueDate()));
             case Event event -> "E | %s | %s | %s | %s".formatted(
-                    completed, event.getTitle(), DateTimeParser.formatForStorage(event.getFrom()), DateTimeParser.formatForStorage(event.getTo()));
+                    completionMarker,
+                    event.getTitle(),
+                    DateTimeParser.formatForStorage(event.getFrom()),
+                    DateTimeParser.formatForStorage(event.getTo()));
             default -> throw new ZaruException("Unknown task type!");
         };
     }
@@ -110,21 +116,21 @@ public class Storage {
         }
 
         String taskType = parts[0];
-        boolean completed = parseCompleted(parts[1]);
+        boolean isCompleted = parseCompleted(parts[1]);
         String title = parts[2];
 
         switch (taskType) {
         case "T" -> {
             validatePartCount(parts, 3);
-            return new ToDo(title, completed);
+            return new ToDo(title, isCompleted);
         }
         case "D" -> {
             validatePartCount(parts, 4);
-            return new Deadline(title, completed, parts[3]);
+            return new Deadline(title, isCompleted, parts[3]);
         }
         case "E" -> {
             validatePartCount(parts, 5);
-            return new Event(title, completed, parts[3], parts[4]);
+            return new Event(title, isCompleted, parts[3], parts[4]);
         }
         default -> throw new ZaruException("Unknown task type!");
         }

@@ -15,7 +15,8 @@ import zaru.exception.ZaruException;
 public class DateTimeParser {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma", Locale.ENGLISH);
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern(
+            "MMM dd yyyy, h:mma", Locale.ENGLISH);
 
     /**
      * Parses user-entered date-time text.
