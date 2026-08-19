@@ -94,6 +94,22 @@ public class TaskList {
     }
 
     /**
+    * Filters the task list by title.
+    * @param target The target string to filter by.
+     */
+    public List<Task> filterByTitle(String target) {
+        List<Task> filteredTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.getTitle().toLowerCase().contains(target.toLowerCase())) {
+                filteredTasks.add(task);
+            }
+        }
+
+        return filteredTasks;
+    }
+
+    /**
      * Returns all tasks in display order with one-based numbering.
      *
      * @return Formatted multi-line task list.
