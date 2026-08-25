@@ -54,8 +54,8 @@ public class ParserTest {
     /** Verifies that a slash argument without a value produces an error. */
     @Test
     public void parseMessage_missingKeyValue_exceptionThrown() {
-        ZaruException exception = assertThrows(ZaruException.class,
-                () -> Parser.parseMessage("deadline submit report /by"));
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                Parser.parseMessage("deadline submit report /by"));
 
         assertEquals("Please provide a value after /by.", exception.getMessage());
     }
@@ -63,8 +63,8 @@ public class ParserTest {
     /** Verifies that unsupported command words produce an error. */
     @Test
     public void parseMessage_unknownCommand_exceptionThrown() {
-        ZaruException exception = assertThrows(ZaruException.class,
-                () -> Parser.parseMessage("dance"));
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                Parser.parseMessage("dance"));
 
         assertEquals("Sorry, I don't know what that means ;w;", exception.getMessage());
     }

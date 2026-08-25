@@ -56,16 +56,16 @@ public class Parser {
         }
 
         return switch (command) {
-        case "bye" -> new ByeCommand();
-        case "list" -> new ListCommand();
-        case "mark" -> new MarkCommand(arg);
-        case "unmark" -> new UnmarkCommand(arg);
-        case "delete" -> new DeleteCommand(arg);
-        case "todo" -> new TodoCommand(arg);
-        case "deadline" -> new DeadlineCommand(arg, keyArgs.get("by"));
-        case "event" -> new EventCommand(arg, keyArgs.get("from"), keyArgs.get("to"));
-        case "find" -> new FindCommand(arg);
-        default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
+            case "bye" -> new ByeCommand();
+            case "list" -> new ListCommand();
+            case "mark" -> new MarkCommand(arg);
+            case "unmark" -> new UnmarkCommand(arg);
+            case "delete" -> new DeleteCommand(arg);
+            case "todo" -> new TodoCommand(arg);
+            case "deadline" -> new DeadlineCommand(arg, keyArgs.get("by"));
+            case "event" -> new EventCommand(arg, keyArgs.get("from"), keyArgs.get("to"));
+            case "find" -> new FindCommand(arg);
+            default -> throw new ZaruException("Sorry, I don't know what that means ;w;");
         };
     }
 }
