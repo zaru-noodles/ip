@@ -77,8 +77,8 @@ public class CommandTest {
     public void deadlineCommand_missingDueDate_throwsException() {
         TaskList tasks = createTaskList("invalid-deadline.txt");
 
-        ZaruException exception = assertThrows(ZaruException.class,
-                () -> new DeadlineCommand("submit report", null).execute(tasks));
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                new DeadlineCommand("submit report", null).execute(tasks));
 
         assertEquals("Please provide a deadline date using /by.", exception.getMessage());
     }

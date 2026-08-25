@@ -89,7 +89,7 @@ public class Storage {
         return switch (task) {
             case ToDo toDo -> "T | %s | %s".formatted(completionMarker, toDo.getTitle());
             case Deadline deadline ->
-                    "D | %s | %s | %s".formatted(
+                "D | %s | %s | %s".formatted(
                             completionMarker,
                             deadline.getTitle(),
                             DateTimeParser.formatForStorage(deadline.getDueDate()));
@@ -120,19 +120,19 @@ public class Storage {
         String title = parts[2];
 
         switch (taskType) {
-        case "T" -> {
-            validatePartCount(parts, 3);
-            return new ToDo(title, isCompleted);
-        }
-        case "D" -> {
-            validatePartCount(parts, 4);
-            return new Deadline(title, isCompleted, parts[3]);
-        }
-        case "E" -> {
-            validatePartCount(parts, 5);
-            return new Event(title, isCompleted, parts[3], parts[4]);
-        }
-        default -> throw new ZaruException("Unknown task type!");
+            case "T" -> {
+                validatePartCount(parts, 3);
+                return new ToDo(title, isCompleted);
+            }
+            case "D" -> {
+                validatePartCount(parts, 4);
+                return new Deadline(title, isCompleted, parts[3]);
+            }
+            case "E" -> {
+                validatePartCount(parts, 5);
+                return new Event(title, isCompleted, parts[3], parts[4]);
+            }
+            default -> throw new ZaruException("Unknown task type!");
         }
     }
 
@@ -145,9 +145,9 @@ public class Storage {
      */
     private boolean parseCompleted(String text) throws ZaruException {
         return switch (text) {
-        case "1" -> true;
-        case "0" -> false;
-        default -> throw new ZaruException("Invalid task status in save file!");
+            case "1" -> true;
+            case "0" -> false;
+            default -> throw new ZaruException("Invalid task status in save file!");
         };
     }
 

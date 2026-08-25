@@ -54,8 +54,8 @@ public class DateTimeParserTest {
     /** Verifies that unsupported date input is rejected. */
     @Test
     public void parse_invalidInput_exceptionThrown() {
-        ZaruException exception = assertThrows(ZaruException.class,
-                () -> DateTimeParser.parse("19-08-2026"));
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                DateTimeParser.parse("19-08-2026"));
 
         assertEquals("Please enter dates in yyyy-MM-dd or yyyy-MM-dd HHmm format.", exception.getMessage());
     }
