@@ -43,4 +43,8 @@ public class Zaru {
             }
         }
     }
+
+    public String getResponse(String input) {
+        return "TODO";
+    }
 }

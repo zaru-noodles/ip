@@ -53,7 +53,7 @@ test {
 }
 
 application {
-    mainClass = 'zaru.Zaru'
+    mainClass = 'zaru.Launcher'
 }
 
 jar {
