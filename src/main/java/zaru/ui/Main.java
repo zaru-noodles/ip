@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import zaru.Zaru;
 
 /**
  * A GUI for Zaru using FXML.
@@ -21,6 +22,7 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+            fxmlLoader.<MainWindow>getController().setZaru(new Zaru());
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
