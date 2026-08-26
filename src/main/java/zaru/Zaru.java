@@ -6,6 +6,7 @@ import zaru.command.ByeCommand;
 import zaru.command.Command;
 import zaru.exception.ZaruException;
 import zaru.parser.Parser;
+import zaru.parser.Response;
 import zaru.storage.Storage;
 import zaru.task.TaskList;
 
@@ -34,18 +35,19 @@ public class Zaru {
      * @param input Raw command entered by the user.
      * @return Response message produced by the command or error handling.
      */
-    public String getResponse(String input) {
-        String response = "";
+    public Response getResponse(String input) {
+        Response response = new Response();
         try {
             Command cmd = Parser.parseMessage(input);
-            response = cmd.execute(tasks);
+            response.setText(cmd.execute(tasks));
 
             if (cmd instanceof ByeCommand) {
                 System.exit(0);
             }
 
         } catch (ZaruException e) {
-            response = e.getMessage();
+            response.setText(e.getMessage());
+            response.setType(Response.ResponseType.ERROR);
         }
 
         return response;

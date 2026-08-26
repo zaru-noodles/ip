@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import zaru.Zaru;
+import zaru.parser.Response;
 
 /**
  * Controller for the main GUI.
@@ -44,7 +45,7 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = zaru.getResponse(input);
+        Response response = zaru.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getZaruDialog(response, dukeImage)

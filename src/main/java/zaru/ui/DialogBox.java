@@ -2,6 +2,7 @@ package zaru.ui;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Objects;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import zaru.parser.Response;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -53,9 +55,16 @@ public class DialogBox extends HBox {
         return new DialogBox(text, img);
     }
 
-    public static DialogBox getZaruDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
+    public static DialogBox getZaruDialog(Response response, Image img) {
+        var db = new DialogBox(response.getText(), img);
         db.flip();
+        db.changeDialogStyle(response.getType());
         return db;
+    }
+
+    private void changeDialogStyle(Response.ResponseType responseType) {
+        if (Objects.requireNonNull(responseType) == Response.ResponseType.ERROR) {
+            dialog.getStyleClass().add("error-label");
+        }
     }
 }
