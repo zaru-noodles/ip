@@ -8,43 +8,46 @@ import zaru.exception.ZaruException;
 import zaru.parser.Parser;
 import zaru.storage.Storage;
 import zaru.task.TaskList;
-import zaru.ui.UI;
 
-/** Entry point for the zaru.Zaru chatbot application. */
+/** Coordinates storage, command parsing, and task operations for the Zaru chatbot. */
 public class Zaru {
-    private static Storage storage = new Storage(Path.of("data", "zaru.txt"));
-    private static TaskList tasks = new TaskList(storage);
+    private Storage storage;
+    private TaskList tasks;
 
     /**
-     * Starts the chatbot, reads commands, and ends when the user enters {@code bye}.
-     *
-     * @param args Command-line arguments, which are not used.
+     * Creates a chatbot instance and loads any saved tasks.
      */
-    public static void main(String[] args) {
-        UI.printWelcomeMessage();
+    public Zaru() {
+        storage = new Storage(Path.of("data", "zaru.txt"));
+        tasks = new TaskList(storage);
 
         try {
             tasks.loadFromStorage();
         } catch (ZaruException e) {
-            UI.sendError("Error loading tasks from storage: %s".formatted(e.getMessage()));
-        }
-
-        while (true) {
-            String message = UI.retrieveMessage();
-            try {
-                Command cmd = Parser.parseMessage(message);
-                cmd.execute(tasks);
-
-                if (cmd instanceof ByeCommand) {
-                    break;
-                }
-            } catch (ZaruException e) {
-                UI.sendError(e.getMessage());
-            }
+            System.out.println("Corrupted save file detected. Reverting to empty list.");
         }
     }
 
+    /**
+     * Parses and executes one user command.
+     *
+     * @param input Raw command entered by the user.
+     * @return Response message produced by the command or error handling.
+     */
     public String getResponse(String input) {
-        return "TODO";
+        String response = "";
+        try {
+            Command cmd = Parser.parseMessage(input);
+            response = cmd.execute(tasks);
+
+            if (cmd instanceof ByeCommand) {
+                System.exit(0);
+            }
+
+        } catch (ZaruException e) {
+            response = e.getMessage();
+        }
+
+        return response;
     }
 }
