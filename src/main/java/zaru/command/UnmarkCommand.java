@@ -2,7 +2,7 @@ package zaru.command;
 
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code unmark} command. */
 public class UnmarkCommand extends Command {
@@ -28,16 +28,17 @@ public class UnmarkCommand extends Command {
     }
 
     /**
-     * Marks the selected task as incomplete and displays the updated task.
+     * Marks the selected task as incomplete and returns the response message.
      *
      * @param tasks Current task list.
+     * @return Unmarked-task response message.
      * @throws ZaruException If the task number is invalid or unmarking fails.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         tasks.uncomplete(index);
-        UI.sendMessage("I've unmarked that task!\n%s".formatted(tasks.getTaskString(index)));
+        return "I've unmarked that task!\n%s".formatted(tasks.getTaskString(index));
     }
 }

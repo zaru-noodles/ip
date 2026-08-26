@@ -3,7 +3,7 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.Deadline;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code deadline} command. */
 public class DeadlineCommand extends Command {
@@ -32,16 +32,21 @@ public class DeadlineCommand extends Command {
     }
 
     /**
-     * Validates and adds the deadline task, then displays the updated task list.
+     * Validates and adds the deadline task, then returns the response message.
      *
      * @param tasks Current task list.
+     * @return Task-added response message.
      * @throws ZaruException If required text or the deadline date is invalid.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a deadline cannot be empty.");
         validateNonEmpty(dueDate, "Please provide a deadline date using /by.");
         tasks.add(new Deadline(description, dueDate));
-        UI.printAddTaskMessage(tasks);
+        int numberOfTasks = tasks.size();
+        return "Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+                tasks.getTaskString(numberOfTasks),
+                numberOfTasks,
+                numberOfTasks == 1 ? "" : "s");
     }
 }

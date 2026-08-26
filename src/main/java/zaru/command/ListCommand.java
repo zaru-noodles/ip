@@ -2,7 +2,7 @@ package zaru.command;
 
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code list} command. */
 public class ListCommand extends Command {
@@ -17,17 +17,18 @@ public class ListCommand extends Command {
     }
 
     /**
-     * Displays either the empty-list message or all current tasks.
+     * Returns either the empty-list message or all current tasks.
      *
      * @param tasks Current task list.
+     * @return Task-list response message.
      * @throws ZaruException If displaying the command response fails.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         if (tasks.size() == 0) {
-            UI.sendMessage("You have no tasks!");
+            return "You have no tasks!";
         } else {
-            UI.sendMessage("Here are your tasks:\n%s".formatted(tasks));
+            return "Here are your tasks:\n%s".formatted(tasks);
         }
     }
 }

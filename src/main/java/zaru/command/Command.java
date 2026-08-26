@@ -16,9 +16,10 @@ public abstract class Command {
      * Executes this command using the application task list.
      *
      * @param tasks Current task list.
+     * @return The response message for this command.
      * @throws ZaruException If command arguments or task operations are invalid.
      */
-    public abstract void execute(TaskList tasks) throws ZaruException;
+    public abstract String execute(TaskList tasks) throws ZaruException;
 
     /**
      * Converts a user-provided number into an integer.

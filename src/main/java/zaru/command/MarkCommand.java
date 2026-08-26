@@ -2,7 +2,7 @@ package zaru.command;
 
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code mark} command. */
 public class MarkCommand extends Command {
@@ -28,16 +28,17 @@ public class MarkCommand extends Command {
     }
 
     /**
-     * Marks the selected task as complete and displays the updated task.
+     * Marks the selected task as complete and returns the response message.
      *
      * @param tasks Current task list.
+     * @return Marked-task response message.
      * @throws ZaruException If the task number is invalid or marking fails.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         tasks.complete(index);
-        UI.sendMessage("Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(index)));
+        return "Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(index));
     }
 }
