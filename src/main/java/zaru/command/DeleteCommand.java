@@ -2,7 +2,7 @@ package zaru.command;
 
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code delete} command. */
 public class DeleteCommand extends Command {
@@ -28,17 +28,18 @@ public class DeleteCommand extends Command {
     }
 
     /**
-     * Validates the task number, removes the selected task, and displays it.
+     * Validates the task number, removes the selected task, and returns the response message.
      *
      * @param tasks Current task list.
+     * @return Deleted-task response message.
      * @throws ZaruException If the task number is invalid or deletion fails.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         int index = parseNumber(taskNumber);
         validateTaskNumber(tasks, index);
         String deletedTask = tasks.getTaskString(index);
         tasks.delete(index);
-        UI.sendMessage("I've deleted that task!\n%s".formatted(deletedTask));
+        return "I've deleted that task!\n%s".formatted(deletedTask);
     }
 }

@@ -3,7 +3,7 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.Event;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code event} command. */
 public class EventCommand extends Command {
@@ -35,17 +35,22 @@ public class EventCommand extends Command {
     }
 
     /**
-     * Validates and adds the event task, then displays the updated task list.
+     * Validates and adds the event task, then returns the response message.
      *
      * @param tasks Current task list.
+     * @return Task-added response message.
      * @throws ZaruException If required text or either event time is invalid.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of an event cannot be empty.");
         validateNonEmpty(from, "Please provide an event start time using /from.");
         validateNonEmpty(to, "Please provide an event end time using /to.");
         tasks.add(new Event(description, from, to));
-        UI.printAddTaskMessage(tasks);
+        int numberOfTasks = tasks.size();
+        return "Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+                tasks.getTaskString(numberOfTasks),
+                numberOfTasks,
+                numberOfTasks == 1 ? "" : "s");
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import zaru.exception.ZaruException;
 import zaru.task.Task;
 import zaru.task.TaskList;
-import zaru.ui.UI;
+
 
 /** Executes the {@code find} command. */
 public class FindCommand extends Command {
@@ -31,13 +31,14 @@ public class FindCommand extends Command {
     }
 
     /**
-     * Finds tasks whose titles contain the requested search text.
+     * Finds tasks whose titles contain the requested search text and returns the response message.
      *
      * @param tasks Current task list.
+     * @return Matching-task response message.
      * @throws ZaruException If the search text is empty.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(target, "Include a search target!");
         StringBuilder sb = new StringBuilder();
         List<Task> filteredTaskList = tasks.filterByTitle(target);
@@ -46,7 +47,7 @@ public class FindCommand extends Command {
             sb.append("   ").append(task.toString()).append("\n");
         }
 
-        UI.sendMessage("Meow! Here are the matching tasks in your list:\n%s".formatted(sb));
+        return "Meow! Here are the matching tasks in your list:\n%s".formatted(sb);
 
     }
 }

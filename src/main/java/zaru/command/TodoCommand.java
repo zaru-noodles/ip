@@ -3,7 +3,7 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 import zaru.task.ToDo;
-import zaru.ui.UI;
+
 
 /** Executes the {@code todo} command. */
 public class TodoCommand extends Command {
@@ -29,15 +29,20 @@ public class TodoCommand extends Command {
     }
 
     /**
-     * Validates and adds the todo task, then displays the updated task list.
+     * Validates and adds the todo task, then returns the response message.
      *
      * @param tasks Current task list.
+     * @return Task-added response message.
      * @throws ZaruException If the todo description is empty or adding fails.
      */
     @Override
-    public void execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) throws ZaruException {
         validateNonEmpty(description, "The description of a todo cannot be empty.");
         tasks.add(new ToDo(description));
-        UI.printAddTaskMessage(tasks);
+        int numberOfTasks = tasks.size();
+        return "Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+                tasks.getTaskString(numberOfTasks),
+                numberOfTasks,
+                numberOfTasks == 1 ? "" : "s");
     }
 }

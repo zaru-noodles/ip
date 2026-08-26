@@ -6,41 +6,50 @@ import zaru.command.ByeCommand;
 import zaru.command.Command;
 import zaru.exception.ZaruException;
 import zaru.parser.Parser;
+import zaru.parser.Response;
 import zaru.storage.Storage;
 import zaru.task.TaskList;
-import zaru.ui.UI;
 
-/** Entry point for the zaru.Zaru chatbot application. */
+/** Coordinates storage, command parsing, and task operations for the Zaru chatbot. */
 public class Zaru {
-    private static Storage storage = new Storage(Path.of("data", "zaru.txt"));
-    private static TaskList tasks = new TaskList(storage);
+    private Storage storage;
+    private TaskList tasks;
 
     /**
-     * Starts the chatbot, reads commands, and ends when the user enters {@code bye}.
-     *
-     * @param args Command-line arguments, which are not used.
+     * Creates a chatbot instance and loads any saved tasks.
      */
-    public static void main(String[] args) {
-        UI.printWelcomeMessage();
+    public Zaru() {
+        storage = new Storage(Path.of("data", "zaru.txt"));
+        tasks = new TaskList(storage);
 
         try {
             tasks.loadFromStorage();
         } catch (ZaruException e) {
-            UI.sendError("Error loading tasks from storage: %s".formatted(e.getMessage()));
+            System.out.println("Corrupted save file detected. Reverting to empty list.");
         }
+    }
 
-        while (true) {
-            String message = UI.retrieveMessage();
-            try {
-                Command cmd = Parser.parseMessage(message);
-                cmd.execute(tasks);
+    /**
+     * Parses and executes one user command.
+     *
+     * @param input Raw command entered by the user.
+     * @return Response message produced by the command or error handling.
+     */
+    public Response getResponse(String input) {
+        Response response = new Response();
+        try {
+            Command cmd = Parser.parseMessage(input);
+            response.setText(cmd.execute(tasks));
 
-                if (cmd instanceof ByeCommand) {
-                    break;
-                }
-            } catch (ZaruException e) {
-                UI.sendError(e.getMessage());
+            if (cmd instanceof ByeCommand) {
+                System.exit(0);
             }
+
+        } catch (ZaruException e) {
+            response.setText(e.getMessage());
+            response.setType(Response.ResponseType.ERROR);
         }
+
+        return response;
     }
 }
