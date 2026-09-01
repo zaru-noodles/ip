@@ -26,6 +26,8 @@ public class Parser {
      * @throws ZaruException If the user input is empty or contains a malformed keyed argument.
      */
     public static Command parseMessage(String message) throws ZaruException {
+        assert message != null : "Message should be supplied by the user interface.";
+
         message = message.trim();
         if (message.isEmpty()) {
             throw new ZaruException("Pwease enter a command!");

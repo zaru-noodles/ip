@@ -17,6 +17,8 @@ public class TaskList {
      * @param storage Storage used when the list changes or loads data.
      */
     public TaskList(Storage storage) {
+        assert storage != null : "Task list requires a storage helper.";
+
         this.storage = storage;
         this.tasks = new ArrayList<>();
     }
@@ -28,6 +30,8 @@ public class TaskList {
      * @throws ZaruException If the updated list cannot be saved.
      */
     public void add(Task task) throws ZaruException {
+        assert task != null : "Only constructed tasks should be added.";
+
         tasks.add(task);
         storage.save(tasks);
     }
@@ -39,6 +43,8 @@ public class TaskList {
      * @throws ZaruException If the updated list cannot be saved.
      */
     public void delete(int index) throws ZaruException {
+        assert isValidIndex(index) : "Task index should have been validated by the command.";
+
         tasks.remove(index - 1);
         storage.save(tasks);
     }
@@ -59,6 +65,8 @@ public class TaskList {
      * @throws ZaruException If the updated list cannot be saved.
      */
     public void complete(int index) throws ZaruException {
+        assert isValidIndex(index) : "Task index should have been validated by the command.";
+
         tasks.get(index - 1).setCompleted(true);
         storage.save(tasks);
     }
@@ -70,6 +78,8 @@ public class TaskList {
      * @throws ZaruException If the updated list cannot be saved.
      */
     public void uncomplete(int index) throws ZaruException {
+        assert isValidIndex(index) : "Task index should have been validated by the command.";
+
         tasks.get(index - 1).setCompleted(false);
         storage.save(tasks);
     }
@@ -81,6 +91,8 @@ public class TaskList {
      * @return Formatted task text.
      */
     public String getTaskString(int index) {
+        assert isValidIndex(index) : "Task index should refer to an existing task.";
+
         return tasks.get(index - 1).toString();
     }
 
@@ -90,7 +102,10 @@ public class TaskList {
      * @throws ZaruException If saved task data cannot be loaded.
      */
     public void loadFromStorage() throws ZaruException {
-        tasks = storage.load();
+        List<Task> loadedTasks = storage.load();
+        assert loadedTasks != null : "Storage should always return a task list.";
+
+        tasks = loadedTasks;
     }
 
     /**
@@ -100,6 +115,8 @@ public class TaskList {
      * @return Tasks whose titles contain the target string, ignoring case.
      */
     public List<Task> filterByTitle(String target) {
+        assert target != null : "Search target should have been validated by the command.";
+
         List<Task> filteredTasks = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -109,6 +126,16 @@ public class TaskList {
         }
 
         return filteredTasks;
+    }
+
+    /**
+     * Checks whether an index refers to a task using the list's one-based indexing convention.
+     *
+     * @param index One-based task index.
+     * @return {@code true} if the index refers to an existing task.
+     */
+    private boolean isValidIndex(int index) {
+        return index >= 1 && index <= tasks.size();
     }
 
     /**

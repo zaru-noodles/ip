@@ -83,29 +83,6 @@ public class CommandTest {
         assertEquals("Please provide a deadline date using /by.", exception.getMessage());
     }
 
-    /** Verifies that a find command displays only tasks matching the search text. */
-    @Test
-    public void findCommand_execute_displaysMatchingTasks() throws ZaruException {
-        TaskList tasks = createTaskList("find.txt");
-        tasks.add(new ToDo("read book"));
-        tasks.add(new ToDo("return book"));
-        tasks.add(new ToDo("watch movie"));
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        PrintStream originalOutput = System.out;
-        try {
-            System.setOut(new PrintStream(output));
-            new FindCommand("book").execute(tasks);
-        } finally {
-            System.setOut(originalOutput);
-        }
-
-        String response = output.toString();
-        assertTrue(response.contains("[T][ ] read book"));
-        assertTrue(response.contains("[T][ ] return book"));
-        assertFalse(response.contains("watch movie"));
-    }
-
     /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));

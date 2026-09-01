@@ -18,6 +18,9 @@ public class Response {
      * @param type Response category.
      */
     public Response(String text, ResponseType type) {
+        assert text != null : "Response text should always be provided.";
+        assert type != null : "Response type should always be provided.";
+
         this.text = text;
         this.type = type;
     }
@@ -60,6 +63,8 @@ public class Response {
      * @param text New response text.
      */
     public void setText(String text) {
+        assert text != null : "Response text should always be provided.";
+
         this.text = text;
     }
 
@@ -69,6 +74,8 @@ public class Response {
      * @param type New response category.
      */
     public void setType(ResponseType type) {
+        assert type != null : "Response type should always be provided.";
+
         this.type = type;
     }
 }

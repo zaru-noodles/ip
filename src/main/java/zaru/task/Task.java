@@ -12,6 +12,8 @@ public abstract class Task {
      * @param isCompleted Whether the task is already complete.
      */
     public Task(String title, boolean isCompleted) {
+        assert title != null : "Task title should have been validated before construction.";
+
         this.title = title;
         this.isCompleted = isCompleted;
     }

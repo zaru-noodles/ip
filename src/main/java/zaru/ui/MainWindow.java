@@ -28,13 +28,23 @@ public class MainWindow extends AnchorPane {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
     private Image zaruImage = new Image(this.getClass().getResourceAsStream("/images/Zaru.png"));
 
+    /** Initializes bindings after FXML fields have been injected. */
     @FXML
     public void initialize() {
+        assert scrollPane != null : "Scroll pane should have been injected by FXML.";
+        assert dialogContainer != null : "Dialog container should have been injected by FXML.";
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Duke instance */
+    /**
+     * Injects the chatbot instance.
+     *
+     * @param z Chatbot used to respond to user input.
+     */
     public void setZaru(Zaru z) {
+        assert z != null : "Main window requires a Zaru instance.";
+
         zaru = z;
     }
 
@@ -44,6 +54,10 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
+        assert zaru != null : "Zaru should have been injected before handling input.";
+        assert userInput != null : "User input field should have been injected by FXML.";
+        assert dialogContainer != null : "Dialog container should have been injected by FXML.";
+
         String input = userInput.getText();
         Response response = zaru.getResponse(input);
         dialogContainer.getChildren().addAll(
