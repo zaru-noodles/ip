@@ -56,6 +56,9 @@ public class Event extends Task {
      */
     public Event(String title, boolean isCompleted, LocalDateTime from, LocalDateTime to) {
         super(title, isCompleted);
+        assert from != null : "Event start time should have been parsed before construction.";
+        assert to != null : "Event end time should have been parsed before construction.";
+
         this.from = from;
         this.to = to;
     }

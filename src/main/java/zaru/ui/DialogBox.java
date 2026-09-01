@@ -37,6 +37,8 @@ public class DialogBox extends HBox {
 
         dialogLabel.setText(text);
         displayPicture.setImage(image);
+        assert dialogLabel != null : "Dialog label should have been injected by FXML.";
+        assert displayPicture != null : "Display picture should have been injected by FXML.";
     }
 
     /**
@@ -69,6 +71,7 @@ public class DialogBox extends HBox {
      * @return Dialog box for the chatbot.
      */
     public static DialogBox createZaruDialog(Response response, Image image) {
+        assert response != null : "Dialog box requires a chatbot response.";
         DialogBox dialogBox = new DialogBox(response.getText(), image);
         dialogBox.formatAsZaruDialog();
         dialogBox.changeDialogStyle(response.getType());

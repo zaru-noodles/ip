@@ -27,16 +27,21 @@ public class MainWindow extends AnchorPane {
     /** Initializes the scroll-pane binding after FXML fields are injected. */
     @FXML
     public void initialize() {
+        assert scrollPane != null : "Scroll pane should have been injected by FXML.";
+        assert dialogContainer != null : "Dialog container should have been injected by FXML.";
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
     /**
      * Injects the chatbot instance.
      *
-     * @param zaru Chatbot used to respond to user input.
+     * @param z Chatbot used to respond to user input.
      */
-    public void setZaru(Zaru zaru) {
-        this.zaru = zaru;
+    public void setZaru(Zaru z) {
+        assert z != null : "Main window requires a Zaru instance.";
+
+        zaru = z;
     }
 
     /**
@@ -45,6 +50,10 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
+        assert zaru != null : "Zaru should have been injected before handling input.";
+        assert userInput != null : "User input field should have been injected by FXML.";
+        assert dialogContainer != null : "Dialog container should have been injected by FXML.";
+
         String input = userInput.getText();
         Response response = zaru.getResponse(input);
         dialogContainer.getChildren().addAll(
