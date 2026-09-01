@@ -7,7 +7,7 @@ import zaru.parser.DateTimeParser;
 
 /** Represents a task that must be completed by a specified date and time. */
 public class Deadline extends Task {
-    private LocalDateTime dueDate;
+    private final LocalDateTime dueDate;
 
     /**
      * Creates an incomplete deadline from user-entered date text.

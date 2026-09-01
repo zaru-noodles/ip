@@ -1,7 +1,6 @@
 package zaru.ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -20,15 +19,12 @@ public class MainWindow extends AnchorPane {
     private VBox dialogContainer;
     @FXML
     private TextField userInput;
-    @FXML
-    private Button sendButton;
-
     private Zaru zaru;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
-    private Image zaruImage = new Image(this.getClass().getResourceAsStream("/images/Zaru.png"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
+    private final Image zaruImage = new Image(this.getClass().getResourceAsStream("/images/Zaru.png"));
 
-    /** Initializes bindings after FXML fields have been injected. */
+    /** Initializes the scroll-pane binding after FXML fields are injected. */
     @FXML
     public void initialize() {
         assert scrollPane != null : "Scroll pane should have been injected by FXML.";
@@ -61,9 +57,8 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         Response response = zaru.getResponse(input);
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getZaruDialog(response, zaruImage)
-        );
+                DialogBox.createUserDialog(input, userImage),
+                DialogBox.createZaruDialog(response, zaruImage));
         userInput.clear();
     }
 }

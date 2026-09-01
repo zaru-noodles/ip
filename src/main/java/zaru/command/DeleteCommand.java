@@ -3,7 +3,6 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
-
 /** Executes the {@code delete} command. */
 public class DeleteCommand extends Command {
     private final String taskNumber;
@@ -36,10 +35,9 @@ public class DeleteCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        int index = parseNumber(taskNumber);
-        validateTaskNumber(tasks, index);
-        String deletedTask = tasks.getTaskString(index);
-        tasks.delete(index);
+        int taskIndex = parseTaskNumber(tasks, taskNumber);
+        String deletedTask = tasks.getTaskString(taskIndex);
+        tasks.delete(taskIndex);
         return "I've deleted that task!\n%s".formatted(deletedTask);
     }
 }

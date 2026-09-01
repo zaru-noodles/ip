@@ -2,14 +2,15 @@ package zaru.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import zaru.exception.ZaruException;
 import zaru.storage.Storage;
 
 /** Manages the current tasks and persists changes through a storage helper. */
 public class TaskList {
-    private List<Task> tasks;
-    private Storage storage;
+    private final List<Task> tasks;
+    private final Storage storage;
 
     /**
      * Creates an empty task list backed by the given storage helper.
@@ -105,7 +106,8 @@ public class TaskList {
         List<Task> loadedTasks = storage.load();
         assert loadedTasks != null : "Storage should always return a task list.";
 
-        tasks = loadedTasks;
+        tasks.clear();
+        tasks.addAll(loadedTasks);
     }
 
     /**
@@ -118,9 +120,11 @@ public class TaskList {
         assert target != null : "Search target should have been validated by the command.";
 
         List<Task> filteredTasks = new ArrayList<>();
+        String normalizedTarget = target.toLowerCase(Locale.ROOT);
 
         for (Task task : tasks) {
-            if (task.getTitle().toLowerCase().contains(target.toLowerCase())) {
+            String normalizedTitle = task.getTitle().toLowerCase(Locale.ROOT);
+            if (normalizedTitle.contains(normalizedTarget)) {
                 filteredTasks.add(task);
             }
         }

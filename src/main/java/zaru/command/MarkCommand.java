@@ -3,7 +3,6 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
-
 /** Executes the {@code mark} command. */
 public class MarkCommand extends Command {
     private final String taskNumber;
@@ -36,9 +35,8 @@ public class MarkCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        int index = parseNumber(taskNumber);
-        validateTaskNumber(tasks, index);
-        tasks.complete(index);
-        return "Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(index));
+        int taskIndex = parseTaskNumber(tasks, taskNumber);
+        tasks.complete(taskIndex);
+        return "Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(taskIndex));
     }
 }

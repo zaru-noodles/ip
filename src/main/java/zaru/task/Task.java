@@ -2,7 +2,7 @@ package zaru.task;
 
 /** Stores the common description and completion state of a task. */
 public abstract class Task {
-    private String title;
+    private final String title;
     private boolean isCompleted;
 
     /**

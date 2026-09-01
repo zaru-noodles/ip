@@ -17,6 +17,16 @@ import zaru.task.ToDo;
  * Handles loading tasks from and saving tasks to the hard disk.
  */
 public class Storage {
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String COMPLETED_MARKER = "1";
+    private static final String INCOMPLETE_MARKER = "0";
+    private static final String FIELD_SEPARATOR_REGEX = "\\s*\\|\\s*";
+    private static final int TODO_PART_COUNT = 3;
+    private static final int DEADLINE_PART_COUNT = 4;
+    private static final int EVENT_PART_COUNT = 5;
+
     private final Path filePath;
 
     /**
@@ -33,7 +43,7 @@ public class Storage {
     /**
      * Loads saved tasks from the hard disk.
      *
-     * @return zaru.task.Task list restored from the save file, or an empty list if the file does not exist.
+     * @return Task list restored from the save file, or an empty list if the file does not exist.
      * @throws ZaruException If the file cannot be read or contains invalid task data.
      */
     public List<Task> load() throws ZaruException {
@@ -60,7 +70,7 @@ public class Storage {
     /**
      * Saves all tasks to the hard disk.
      *
-     * @param tasks zaru.task.Task list to save.
+     * @param tasks Task list to save.
      * @throws ZaruException If the save file cannot be written.
      */
     public void save(List<Task> tasks) throws ZaruException {
@@ -84,21 +94,23 @@ public class Storage {
     /**
      * Converts a task object into one line of save-file text.
      *
-     * @param task zaru.task.Task to convert.
+     * @param task Task to convert.
      * @return Save-file representation of the task.
      * @throws ZaruException If the task type is not supported by the save format.
      */
     private String taskToFileString(Task task) throws ZaruException {
-        String completionMarker = task.isCompleted() ? "1" : "0";
+        String completionMarker = task.isCompleted() ? COMPLETED_MARKER : INCOMPLETE_MARKER;
 
         return switch (task) {
-            case ToDo toDo -> "T | %s | %s".formatted(completionMarker, toDo.getTitle());
-            case Deadline deadline ->
-                "D | %s | %s | %s".formatted(
-                            completionMarker,
-                            deadline.getTitle(),
-                            DateTimeParser.formatForStorage(deadline.getDueDate()));
-            case Event event -> "E | %s | %s | %s | %s".formatted(
+            case ToDo toDo -> "%s | %s | %s".formatted(
+                    TODO_TYPE, completionMarker, toDo.getTitle());
+            case Deadline deadline -> "%s | %s | %s | %s".formatted(
+                    DEADLINE_TYPE,
+                    completionMarker,
+                    deadline.getTitle(),
+                    DateTimeParser.formatForStorage(deadline.getDueDate()));
+            case Event event -> "%s | %s | %s | %s | %s".formatted(
+                    EVENT_TYPE,
                     completionMarker,
                     event.getTitle(),
                     DateTimeParser.formatForStorage(event.getFrom()),
@@ -111,12 +123,12 @@ public class Storage {
      * Converts one line of save-file text into a task object.
      *
      * @param line One line from the save file.
-     * @return zaru.task.Task represented by the line.
+     * @return Task represented by the line.
      * @throws ZaruException If the line does not match the expected save format.
      */
     private Task fileStringToTask(String line) throws ZaruException {
-        String[] parts = line.split("\\s*\\|\\s*", -1);
-        if (parts.length < 3) {
+        String[] parts = line.split(FIELD_SEPARATOR_REGEX, -1);
+        if (parts.length < TODO_PART_COUNT) {
             throw new ZaruException("Invalid task data in save file!");
         }
 
@@ -124,21 +136,21 @@ public class Storage {
         boolean isCompleted = parseCompleted(parts[1]);
         String title = parts[2];
 
-        switch (taskType) {
-            case "T" -> {
-                validatePartCount(parts, 3);
-                return new ToDo(title, isCompleted);
+        return switch (taskType) {
+            case TODO_TYPE -> {
+                validatePartCount(parts, TODO_PART_COUNT);
+                yield new ToDo(title, isCompleted);
             }
-            case "D" -> {
-                validatePartCount(parts, 4);
-                return new Deadline(title, isCompleted, parts[3]);
+            case DEADLINE_TYPE -> {
+                validatePartCount(parts, DEADLINE_PART_COUNT);
+                yield new Deadline(title, isCompleted, parts[3]);
             }
-            case "E" -> {
-                validatePartCount(parts, 5);
-                return new Event(title, isCompleted, parts[3], parts[4]);
+            case EVENT_TYPE -> {
+                validatePartCount(parts, EVENT_PART_COUNT);
+                yield new Event(title, isCompleted, parts[3], parts[4]);
             }
             default -> throw new ZaruException("Unknown task type!");
-        }
+        };
     }
 
     /**
@@ -150,8 +162,8 @@ public class Storage {
      */
     private boolean parseCompleted(String text) throws ZaruException {
         return switch (text) {
-            case "1" -> true;
-            case "0" -> false;
+            case COMPLETED_MARKER -> true;
+            case INCOMPLETE_MARKER -> false;
             default -> throw new ZaruException("Invalid task status in save file!");
         };
     }

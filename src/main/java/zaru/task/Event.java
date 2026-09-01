@@ -7,8 +7,8 @@ import zaru.parser.DateTimeParser;
 
 /** Represents a task that occurs between a specified start and end time. */
 public class Event extends Task {
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     /**
      * Creates an incomplete event from user-entered time text.

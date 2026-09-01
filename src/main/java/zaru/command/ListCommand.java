@@ -3,7 +3,6 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
-
 /** Executes the {@code list} command. */
 public class ListCommand extends Command {
     /**
@@ -27,8 +26,8 @@ public class ListCommand extends Command {
     public String execute(TaskList tasks) throws ZaruException {
         if (tasks.size() == 0) {
             return "You have no tasks!";
-        } else {
-            return "Here are your tasks:\n%s".formatted(tasks);
         }
+
+        return "Here are your tasks:\n%s".formatted(tasks);
     }
 }

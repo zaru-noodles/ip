@@ -13,19 +13,22 @@ import zaru.Zaru;
  * A GUI for Zaru using FXML.
  */
 public class Main extends Application {
+    private static final double MIN_WINDOW_HEIGHT = 220;
+    private static final double MIN_WINDOW_WIDTH = 417;
+
     @Override
     public void start(Stage stage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
-            AnchorPane ap = fxmlLoader.load();
-            Scene scene = new Scene(ap);
+            AnchorPane mainWindow = fxmlLoader.load();
+            Scene scene = new Scene(mainWindow);
             stage.setScene(scene);
-            stage.setMinHeight(220);
-            stage.setMinWidth(417);
+            stage.setMinHeight(MIN_WINDOW_HEIGHT);
+            stage.setMinWidth(MIN_WINDOW_WIDTH);
             fxmlLoader.<MainWindow>getController().setZaru(new Zaru());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to load the main window.", e);
         }
     }
 }

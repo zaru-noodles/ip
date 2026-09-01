@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -81,6 +79,21 @@ public class CommandTest {
                 new DeadlineCommand("submit report", null).execute(tasks));
 
         assertEquals("Please provide a deadline date using /by.", exception.getMessage());
+    }
+
+    /** Verifies that a find command displays only tasks matching the search text. */
+    @Test
+    public void findCommand_execute_displaysMatchingTasks() throws ZaruException {
+        TaskList tasks = createTaskList("find.txt");
+        tasks.add(new ToDo("read book"));
+        tasks.add(new ToDo("return book"));
+        tasks.add(new ToDo("watch movie"));
+
+        String response = new FindCommand("book").execute(tasks);
+
+        assertTrue(response.contains("[T][ ] read book"));
+        assertTrue(response.contains("[T][ ] return book"));
+        assertFalse(response.contains("watch movie"));
     }
 
     /** Creates a task list backed by a temporary save file. */
