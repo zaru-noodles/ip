@@ -6,10 +6,10 @@ public class Response {
     public enum ResponseType {
         STATUS,
         ERROR
-    };
+    }
 
-    private String text;
-    private ResponseType type;
+    private final String text;
+    private final ResponseType type;
 
     /**
      * Creates a response with the given text and category.
@@ -31,11 +31,6 @@ public class Response {
         this(text, ResponseType.STATUS);
     }
 
-    /** Creates an empty status response. */
-    public Response() {
-        this("", ResponseType.STATUS);
-    }
-
     /**
      * Returns the response text.
      *
@@ -54,21 +49,4 @@ public class Response {
         return type;
     }
 
-    /**
-     * Updates the response text.
-     *
-     * @param text New response text.
-     */
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    /**
-     * Updates the response category.
-     *
-     * @param type New response category.
-     */
-    public void setType(ResponseType type) {
-        this.type = type;
-    }
 }

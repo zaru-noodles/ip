@@ -2,7 +2,6 @@ package zaru.ui;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Objects;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,49 +21,63 @@ import zaru.parser.Response;
  */
 public class DialogBox extends HBox {
     @FXML
-    private Label dialog;
+    private Label dialogLabel;
     @FXML
     private ImageView displayPicture;
 
-    private DialogBox(String text, Image img) {
+    private DialogBox(String text, Image image) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to load a dialog box.", e);
         }
 
-        dialog.setText(text);
-        displayPicture.setImage(img);
+        dialogLabel.setText(text);
+        displayPicture.setImage(image);
     }
 
     /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
+     * Formats the dialog box with the chatbot image on the left.
      */
-    private void flip() {
-        ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
-        Collections.reverse(tmp);
-        getChildren().setAll(tmp);
-        dialog.getStyleClass().add("reply-label");
+    private void formatAsZaruDialog() {
+        ObservableList<Node> children = FXCollections.observableArrayList(getChildren());
+        Collections.reverse(children);
+        getChildren().setAll(children);
+        dialogLabel.getStyleClass().add("reply-label");
         setAlignment(Pos.TOP_LEFT);
     }
 
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+    /**
+     * Creates a dialog box for user input.
+     *
+     * @param text User input to display.
+     * @param image User display image.
+     * @return Dialog box for the user.
+     */
+    public static DialogBox createUserDialog(String text, Image image) {
+        return new DialogBox(text, image);
     }
 
-    public static DialogBox getZaruDialog(Response response, Image img) {
-        var db = new DialogBox(response.getText(), img);
-        db.flip();
-        db.changeDialogStyle(response.getType());
-        return db;
+    /**
+     * Creates a dialog box for a chatbot response.
+     *
+     * @param response Chatbot response to display.
+     * @param image Chatbot display image.
+     * @return Dialog box for the chatbot.
+     */
+    public static DialogBox createZaruDialog(Response response, Image image) {
+        DialogBox dialogBox = new DialogBox(response.getText(), image);
+        dialogBox.formatAsZaruDialog();
+        dialogBox.changeDialogStyle(response.getType());
+        return dialogBox;
     }
 
     private void changeDialogStyle(Response.ResponseType responseType) {
-        if (Objects.requireNonNull(responseType) == Response.ResponseType.ERROR) {
-            dialog.getStyleClass().add("error-label");
+        if (responseType == Response.ResponseType.ERROR) {
+            dialogLabel.getStyleClass().add("error-label");
         }
     }
 }

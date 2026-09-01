@@ -12,11 +12,14 @@ import zaru.exception.ZaruException;
 /**
  * Handles parsing and formatting date-time values used in task commands.
  */
-public class DateTimeParser {
+public final class DateTimeParser {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern(
             "MMM dd yyyy, h:mma", Locale.ENGLISH);
+
+    private DateTimeParser() {
+    }
 
     /**
      * Parses user-entered date-time text.

@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -91,16 +89,8 @@ public class CommandTest {
         tasks.add(new ToDo("return book"));
         tasks.add(new ToDo("watch movie"));
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        PrintStream originalOutput = System.out;
-        try {
-            System.setOut(new PrintStream(output));
-            new FindCommand("book").execute(tasks);
-        } finally {
-            System.setOut(originalOutput);
-        }
+        String response = new FindCommand("book").execute(tasks);
 
-        String response = output.toString();
         assertTrue(response.contains("[T][ ] read book"));
         assertTrue(response.contains("[T][ ] return book"));
         assertFalse(response.contains("watch movie"));

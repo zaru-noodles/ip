@@ -3,7 +3,6 @@ package zaru.command;
 import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
-
 /** Executes the {@code unmark} command. */
 public class UnmarkCommand extends Command {
     private final String taskNumber;
@@ -36,9 +35,8 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        int index = parseNumber(taskNumber);
-        validateTaskNumber(tasks, index);
-        tasks.uncomplete(index);
-        return "I've unmarked that task!\n%s".formatted(tasks.getTaskString(index));
+        int taskIndex = parseTaskNumber(tasks, taskNumber);
+        tasks.uncomplete(taskIndex);
+        return "I've unmarked that task!\n%s".formatted(tasks.getTaskString(taskIndex));
     }
 }

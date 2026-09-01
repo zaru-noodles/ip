@@ -1,6 +1,7 @@
 package zaru.command;
 
 import zaru.exception.ZaruException;
+import zaru.task.Task;
 import zaru.task.TaskList;
 
 /** Defines the common contract and validation helpers for user commands. */
@@ -22,32 +23,46 @@ public abstract class Command {
     public abstract String execute(TaskList tasks) throws ZaruException;
 
     /**
-     * Converts a user-provided number into an integer.
+     * Parses and validates a user-provided task number.
      *
-     * @param num Text entered after a mark or unmark command.
-     * @return The parsed task number.
-     * @throws ZaruException If the text is missing or is not a whole number.
+     * @param tasks Current task list.
+     * @param numberText Task number entered by the user.
+     * @return Valid one-based task number.
+     * @throws ZaruException If the text is missing, is not a whole number, or is outside the task list.
      */
-    protected static int parseNumber(String num) throws ZaruException {
-        validateNonEmpty(num, "Please provide a number.");
+    protected static int parseTaskNumber(TaskList tasks, String numberText) throws ZaruException {
+        validateNonEmpty(numberText, "Please provide a number.");
+
+        int taskNumber;
         try {
-            return Integer.parseInt(num);
+            taskNumber = Integer.parseInt(numberText);
         } catch (NumberFormatException e) {
-            throw new ZaruException("Number %s must be a valid number.".formatted(num));
+            throw new ZaruException("Number %s must be a valid number.".formatted(numberText));
         }
+
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw new ZaruException("Task number must be between 1 and %d!".formatted(tasks.size()));
+        }
+
+        return taskNumber;
     }
 
     /**
-     * Checks whether a task number refers to an existing task.
+     * Adds a task and creates the standard task-added response.
      *
      * @param tasks Current task list.
-     * @param taskNumber One-based task number entered by the user.
-     * @throws ZaruException If the number is outside the task list.
+     * @param task Task to add.
+     * @return Task-added response message.
+     * @throws ZaruException If the updated task list cannot be saved.
      */
-    protected static void validateTaskNumber(TaskList tasks, int taskNumber) throws ZaruException {
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new ZaruException("zaru.task.Task number must be between 1 and %d!".formatted(tasks.size()));
-        }
+    protected static String addTaskAndCreateResponse(TaskList tasks, Task task) throws ZaruException {
+        tasks.add(task);
+        int numberOfTasks = tasks.size();
+
+        return "Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+                tasks.getTaskString(numberOfTasks),
+                numberOfTasks,
+                numberOfTasks == 1 ? "" : "s");
     }
 
     /**

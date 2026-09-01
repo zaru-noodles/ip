@@ -12,14 +12,13 @@ import zaru.task.TaskList;
 
 /** Coordinates storage, command parsing, and task operations for the Zaru chatbot. */
 public class Zaru {
-    private Storage storage;
-    private TaskList tasks;
+    private final TaskList tasks;
 
     /**
      * Creates a chatbot instance and loads any saved tasks.
      */
     public Zaru() {
-        storage = new Storage(Path.of("data", "zaru.txt"));
+        Storage storage = new Storage(Path.of("data", "zaru.txt"));
         tasks = new TaskList(storage);
 
         try {
@@ -36,20 +35,17 @@ public class Zaru {
      * @return Response message produced by the command or error handling.
      */
     public Response getResponse(String input) {
-        Response response = new Response();
         try {
-            Command cmd = Parser.parseMessage(input);
-            response.setText(cmd.execute(tasks));
+            Command command = Parser.parseMessage(input);
+            String responseText = command.execute(tasks);
 
-            if (cmd instanceof ByeCommand) {
+            if (command instanceof ByeCommand) {
                 System.exit(0);
             }
 
+            return new Response(responseText);
         } catch (ZaruException e) {
-            response.setText(e.getMessage());
-            response.setType(Response.ResponseType.ERROR);
+            return new Response(e.getMessage(), Response.ResponseType.ERROR);
         }
-
-        return response;
     }
 }
