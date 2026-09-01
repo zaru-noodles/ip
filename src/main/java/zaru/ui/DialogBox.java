@@ -36,6 +36,9 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
+        assert dialog != null : "Dialog label should have been injected by FXML.";
+        assert displayPicture != null : "Display picture should have been injected by FXML.";
+
         dialog.setText(text);
         displayPicture.setImage(img);
     }
@@ -51,11 +54,27 @@ public class DialogBox extends HBox {
         setAlignment(Pos.TOP_LEFT);
     }
 
+    /**
+     * Creates a dialog box for user input.
+     *
+     * @param text User input to display.
+     * @param img User display image.
+     * @return Dialog box for the user.
+     */
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
 
+    /**
+     * Creates a dialog box for a chatbot response.
+     *
+     * @param response Chatbot response to display.
+     * @param img Chatbot display image.
+     * @return Dialog box for the chatbot.
+     */
     public static DialogBox getZaruDialog(Response response, Image img) {
+        assert response != null : "Dialog box requires a chatbot response.";
+
         var db = new DialogBox(response.getText(), img);
         db.flip();
         db.changeDialogStyle(response.getType());

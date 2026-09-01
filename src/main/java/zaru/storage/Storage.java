@@ -25,6 +25,8 @@ public class Storage {
      * @param filePath Location of the save file.
      */
     public Storage(Path filePath) {
+        assert filePath != null : "Storage requires a save-file path.";
+
         this.filePath = filePath;
     }
 
@@ -62,9 +64,12 @@ public class Storage {
      * @throws ZaruException If the save file cannot be written.
      */
     public void save(List<Task> tasks) throws ZaruException {
+        assert tasks != null : "Storage should receive an initialized task list.";
+
         StringBuilder contents = new StringBuilder();
 
         for (Task task : tasks) {
+            assert task != null : "Task lists should not contain null entries.";
             contents.append(taskToFileString(task)).append(System.lineSeparator());
         }
 
