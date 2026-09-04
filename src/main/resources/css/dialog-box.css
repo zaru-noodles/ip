@@ -1,33 +1,31 @@
 .label {
-    background: navajowhite;
-    -fx-background-color: background;
-    -fx-border-color: peru;
-    -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-border-radius: 1em 1em 0 1em;
-    -fx-text-fill: ladder(background, white 49%, black 50%);
-    -fx-padding: 6px;
-    -fx-border-insets: 0px 7px 0px 7px;
-    -fx-background-insets: 0px 7px 0px 7px;
+    -fx-background-color: rgba(255, 241, 211, 0.96);
+    -fx-background-insets: 0;
+    -fx-background-radius: 14px 14px 4px 14px;
+    -fx-border-color: rgba(171, 105, 46, 0.78);
+    -fx-border-radius: 14px 14px 4px 14px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(55, 34, 18, 0.16), 8, 0.12, 0, 2);
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+    -fx-padding: 9px 12px;
+    -fx-text-fill: #4a3424;
 }
 
 .reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
+    -fx-background-color: rgba(245, 224, 188, 0.97);
+    -fx-background-radius: 14px 14px 14px 4px;
+    -fx-border-color: rgba(145, 91, 42, 0.72);
+    -fx-border-radius: 14px 14px 14px 4px;
 }
 
 .error-label {
-    -fx-background-color: lightpink;
+    -fx-background-color: rgba(250, 211, 202, 0.98);
+    -fx-border-color: #b96f60;
+    -fx-text-fill: #68372e;
 }
 
 #displayPicture {
-    /* Shadow effect on image. */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
-
-    /* Change size of image. */
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-
-    /* Rotate image clockwise by degrees. */
-    -fx-rotate: 0;
+    -fx-effect: dropshadow(gaussian, rgba(55, 34, 18, 0.28), 9, 0.2, 0, 2);
 }
