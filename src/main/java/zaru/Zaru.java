@@ -2,7 +2,7 @@ package zaru;
 
 import java.nio.file.Path;
 
-import zaru.command.ByeCommand;
+import javafx.application.Platform;
 import zaru.command.Command;
 import zaru.exception.ZaruException;
 import zaru.parser.Parser;
@@ -39,13 +39,9 @@ public class Zaru {
             Command command = Parser.parseMessage(input);
             String responseText = command.execute(tasks);
 
-            if (command instanceof ByeCommand) {
-                System.exit(0);
-            }
-
-            return new Response(responseText);
+            return new Response(responseText, Response.ResponseType.STATUS, command.isExit());
         } catch (ZaruException e) {
-            return new Response(e.getMessage(), Response.ResponseType.ERROR);
+            return new Response(e.getMessage(), Response.ResponseType.ERROR, false);
         }
     }
 }

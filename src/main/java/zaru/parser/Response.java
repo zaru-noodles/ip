@@ -10,6 +10,7 @@ public class Response {
 
     private final String text;
     private final ResponseType type;
+    private final boolean isExit;
 
     /**
      * Creates a response with the given text and category.
@@ -17,12 +18,13 @@ public class Response {
      * @param text Response text.
      * @param type Response category.
      */
-    public Response(String text, ResponseType type) {
+    public Response(String text, ResponseType type, boolean isExit) {
         assert text != null : "Response text should always be provided.";
         assert type != null : "Response type should always be provided.";
 
         this.text = text;
         this.type = type;
+        this.isExit = isExit;
     }
 
     /**
@@ -31,7 +33,7 @@ public class Response {
      * @param text Response text.
      */
     public Response(String text) {
-        this(text, ResponseType.STATUS);
+        this(text, ResponseType.STATUS, false);
     }
 
     /**
@@ -52,4 +54,12 @@ public class Response {
         return type;
     }
 
+    /**
+     * Returns whether the response is an exit command.
+     *
+     * @return {@code true} if the response is an exit command.
+     */
+    public boolean isExit() {
+        return isExit;
+    }
 }

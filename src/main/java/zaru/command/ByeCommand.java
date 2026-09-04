@@ -27,4 +27,10 @@ public class ByeCommand extends Command {
     public String execute(TaskList tasks) throws ZaruException {
         return "Bye. Hope to see you again soon!";
     }
+
+    /** Returns {@code true} to indicate that this command is an exit command. */
+    @Override
+    public boolean isExit() {
+        return true;
+    }
 }

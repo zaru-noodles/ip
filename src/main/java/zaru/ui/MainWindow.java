@@ -1,11 +1,14 @@
 package zaru.ui;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import zaru.Zaru;
 import zaru.parser.Response;
 
@@ -60,5 +63,16 @@ public class MainWindow extends AnchorPane {
                 DialogBox.createUserDialog(input, userImage),
                 DialogBox.createZaruDialog(response, zaruImage));
         userInput.clear();
+
+        if (response.isExit()) {
+            endProgram();
+        }
+    }
+
+    /** Ends the program after a short delay. */
+    private void endProgram() {
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(event -> Platform.exit());
+        delay.play();
     }
 }

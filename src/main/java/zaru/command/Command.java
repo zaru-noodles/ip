@@ -77,4 +77,9 @@ public abstract class Command {
             throw new ZaruException(errorMessage);
         }
     }
+
+    /** Returns whether this command is an exit command. */
+    public boolean isExit() {
+        return false;
+    }
 }
