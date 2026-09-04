@@ -36,12 +36,12 @@ public class MainWindow extends AnchorPane {
     /**
      * Injects the chatbot instance.
      *
-     * @param z Chatbot used to respond to user input.
+     * @param zaru Chatbot used to respond to user input.
      */
-    public void setZaru(Zaru z) {
-        assert z != null : "Main window requires a Zaru instance.";
+    public void setZaru(Zaru zaru) {
+        assert zaru != null : "Main window requires a Zaru instance.";
 
-        zaru = z;
+        this.zaru = zaru;
     }
 
     /**

@@ -103,16 +103,16 @@ public class Storage {
 
         return switch (task) {
             case ToDo toDo -> "%s | %s | %s".formatted(
-                    TODO_TYPE, completionMarker, toDo.getTitle());
+                    TODO_TYPE, completionMarker, toDo.getDescription());
             case Deadline deadline -> "%s | %s | %s | %s".formatted(
                     DEADLINE_TYPE,
                     completionMarker,
-                    deadline.getTitle(),
+                    deadline.getDescription(),
                     DateTimeParser.formatForStorage(deadline.getDueDate()));
             case Event event -> "%s | %s | %s | %s | %s".formatted(
                     EVENT_TYPE,
                     completionMarker,
-                    event.getTitle(),
+                    event.getDescription(),
                     DateTimeParser.formatForStorage(event.getFrom()),
                     DateTimeParser.formatForStorage(event.getTo()));
             default -> throw new ZaruException("Unknown task type!");

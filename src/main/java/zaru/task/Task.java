@@ -2,19 +2,19 @@ package zaru.task;
 
 /** Stores the common description and completion state of a task. */
 public abstract class Task {
-    private final String title;
+    private final String description;
     private boolean isCompleted;
 
     /**
      * Creates a task with its description and completion state.
      *
-     * @param title Task description.
+     * @param description Task description.
      * @param isCompleted Whether the task is already complete.
      */
-    public Task(String title, boolean isCompleted) {
-        assert title != null : "Task title should have been validated before construction.";
+    public Task(String description, boolean isCompleted) {
+        assert description != null : "Task description should have been validated before construction.";
 
-        this.title = title;
+        this.description = description;
         this.isCompleted = isCompleted;
     }
 
@@ -23,8 +23,8 @@ public abstract class Task {
      *
      * @return Task description.
      */
-    public String getTitle() {
-        return title;
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -52,6 +52,6 @@ public abstract class Task {
      */
     @Override
     public String toString() {
-        return String.format("%s %s", isCompleted ? "[x]" : "[ ]", title);
+        return String.format("%s %s", isCompleted ? "[x]" : "[ ]", description);
     }
 }

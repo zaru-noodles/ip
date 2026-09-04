@@ -36,7 +36,7 @@ public class MarkCommand extends Command {
     @Override
     public String execute(TaskList tasks) throws ZaruException {
         int taskIndex = parseTaskNumber(tasks, taskNumber);
-        tasks.complete(taskIndex);
+        tasks.markAsComplete(taskIndex);
         return "Meow! I've marked that task as done!\n%s".formatted(tasks.getTaskString(taskIndex));
     }
 }

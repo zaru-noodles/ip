@@ -38,10 +38,10 @@ public class TaskListTest {
         TaskList tasks = createTaskList("completion.txt");
         tasks.add(new ToDo("read book"));
 
-        tasks.complete(1);
+        tasks.markAsComplete(1);
         assertEquals("[T][x] read book", tasks.getTaskString(1));
 
-        tasks.uncomplete(1);
+        tasks.markAsIncomplete(1);
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
     }
 
@@ -56,8 +56,8 @@ public class TaskListTest {
         List<Task> matchingTasks = tasks.filterByTitle("book");
 
         assertEquals(2, matchingTasks.size());
-        assertEquals("read book", matchingTasks.get(0).getTitle());
-        assertEquals("return book", matchingTasks.get(1).getTitle());
+        assertEquals("read book", matchingTasks.get(0).getDescription());
+        assertEquals("return book", matchingTasks.get(1).getDescription());
     }
 
     /** Verifies that filtering ignores differences in letter case. */
@@ -69,7 +69,7 @@ public class TaskListTest {
         List<Task> matchingTasks = tasks.filterByTitle("book");
 
         assertEquals(1, matchingTasks.size());
-        assertEquals("Read Book", matchingTasks.get(0).getTitle());
+        assertEquals("Read Book", matchingTasks.get(0).getDescription());
     }
 
     /** Verifies that filtering returns an empty list when no title matches. */

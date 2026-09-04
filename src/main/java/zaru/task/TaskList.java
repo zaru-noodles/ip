@@ -65,7 +65,7 @@ public class TaskList {
      * @param index One-based task index.
      * @throws ZaruException If the updated list cannot be saved.
      */
-    public void complete(int index) throws ZaruException {
+    public void markAsComplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
 
         tasks.get(index - 1).setCompleted(true);
@@ -78,7 +78,7 @@ public class TaskList {
      * @param index One-based task index.
      * @throws ZaruException If the updated list cannot be saved.
      */
-    public void uncomplete(int index) throws ZaruException {
+    public void markAsIncomplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
 
         tasks.get(index - 1).setCompleted(false);
@@ -123,7 +123,7 @@ public class TaskList {
         String normalizedTarget = target.toLowerCase(Locale.ROOT);
 
         for (Task task : tasks) {
-            String normalizedTitle = task.getTitle().toLowerCase(Locale.ROOT);
+            String normalizedTitle = task.getDescription().toLowerCase(Locale.ROOT);
             if (normalizedTitle.contains(normalizedTarget)) {
                 filteredTasks.add(task);
             }

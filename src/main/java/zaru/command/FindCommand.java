@@ -8,15 +8,15 @@ import zaru.task.TaskList;
 
 /** Executes the {@code find} command. */
 public class FindCommand extends Command {
-    private final String target;
+    private final String keyword;
 
     /**
      * Creates a find command.
      *
-     * @param target Target entered by the user for the search.
+     * @param keyword Keyword entered by the user for the search.
      */
-    public FindCommand(String target) {
-        this.target = target;
+    public FindCommand(String keyword) {
+        this.keyword = keyword;
     }
 
     /**
@@ -38,8 +38,8 @@ public class FindCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        validateNonEmpty(target, "Include a search target!");
-        List<Task> matchingTasks = tasks.filterByTitle(target);
+        validateNonEmpty(keyword, "Include a search target!");
+        List<Task> matchingTasks = tasks.filterByTitle(keyword);
         StringBuilder matchingTasksText = new StringBuilder();
 
         for (Task task : matchingTasks) {
