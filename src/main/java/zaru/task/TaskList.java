@@ -133,6 +133,16 @@ public class TaskList {
     }
 
     /**
+     * Sorts tasks by their natural ordering and saves the updated list.
+     *
+     * @throws ZaruException If the sorted list cannot be saved.
+     */
+    public void sort() throws ZaruException {
+        tasks.sort(null);
+        storage.save(tasks);
+    }
+
+    /**
      * Checks whether an index refers to a task using the list's one-based indexing convention.
      *
      * @param index One-based task index.

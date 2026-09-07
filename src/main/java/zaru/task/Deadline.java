@@ -7,6 +7,8 @@ import zaru.parser.DateTimeParser;
 
 /** Represents a task that must be completed by a specified date and time. */
 public class Deadline extends Task {
+    private static final int TYPE_PRIORITY = 1;
+
     private final LocalDateTime dueDate;
 
     /**
@@ -63,6 +65,28 @@ public class Deadline extends Task {
      */
     public LocalDateTime getDueDate() {
         return dueDate;
+    }
+
+    @Override
+    protected int getTypePriority() {
+        return TYPE_PRIORITY;
+    }
+
+    /**
+     * Compares deadlines by due time, then by description when their due times match.
+     *
+     * @param other Other deadline.
+     * @return A negative value, zero, or a positive value according to the ordering.
+     */
+    @Override
+    protected int compareWithinType(Task other) {
+        Deadline otherDeadline = (Deadline) other;
+        int dateComparison = dueDate.compareTo(otherDeadline.dueDate);
+        if (dateComparison != 0) {
+            return dateComparison;
+        }
+
+        return super.compareWithinType(other);
     }
 
     /**

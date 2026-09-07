@@ -2,7 +2,6 @@ package zaru;
 
 import java.nio.file.Path;
 
-import javafx.application.Platform;
 import zaru.command.Command;
 import zaru.exception.ZaruException;
 import zaru.parser.Parser;

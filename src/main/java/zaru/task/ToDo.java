@@ -2,6 +2,8 @@ package zaru.task;
 
 /** Represents a task without a deadline or scheduled time. */
 public class ToDo extends Task {
+    private static final int TYPE_PRIORITY = 0;
+
     /**
      * Creates a todo task with an explicit completion state.
      *
@@ -19,6 +21,11 @@ public class ToDo extends Task {
      */
     public ToDo(String title) {
         this(title, false);
+    }
+
+    @Override
+    protected int getTypePriority() {
+        return TYPE_PRIORITY;
     }
 
     /**

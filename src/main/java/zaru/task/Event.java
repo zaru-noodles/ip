@@ -7,6 +7,8 @@ import zaru.parser.DateTimeParser;
 
 /** Represents a task that occurs between a specified start and end time. */
 public class Event extends Task {
+    private static final int TYPE_PRIORITY = 2;
+
     private final LocalDateTime from;
     private final LocalDateTime to;
 
@@ -79,6 +81,33 @@ public class Event extends Task {
      */
     public LocalDateTime getTo() {
         return to;
+    }
+
+    @Override
+    protected int getTypePriority() {
+        return TYPE_PRIORITY;
+    }
+
+    /**
+     * Compares events by start time, then end time, then description.
+     *
+     * @param other Other event.
+     * @return A negative value, zero, or a positive value according to the ordering.
+     */
+    @Override
+    protected int compareWithinType(Task other) {
+        Event otherEvent = (Event) other;
+        int startComparison = from.compareTo(otherEvent.from);
+        if (startComparison != 0) {
+            return startComparison;
+        }
+
+        int endComparison = to.compareTo(otherEvent.to);
+        if (endComparison != 0) {
+            return endComparison;
+        }
+
+        return super.compareWithinType(other);
     }
 
     /**

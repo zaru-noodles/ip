@@ -3,6 +3,7 @@ package zaru.task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,32 @@ public class TaskListTest {
         assertEquals(List.of(), tasks.filterByTitle("exercise"));
     }
 
+    /** Verifies that sorting groups task types and orders dated tasks chronologically. */
+    @Test
+    public void sort_mixedTaskTypes_sortsByTypeThenChronologically() throws ZaruException {
+        TaskList tasks = createTaskList("sort.txt");
+        tasks.add(new Event("later event", LocalDateTime.of(2026, 9, 8, 14, 0),
+                LocalDateTime.of(2026, 9, 8, 15, 0)));
+        tasks.add(new Deadline("later deadline", LocalDateTime.of(2026, 9, 10, 18, 0)));
+        tasks.add(new ToDo("write notes"));
+        tasks.add(new Event("earlier event", LocalDateTime.of(2026, 9, 8, 10, 0),
+                LocalDateTime.of(2026, 9, 8, 11, 0)));
+        tasks.add(new Deadline("earlier deadline", LocalDateTime.of(2026, 9, 9, 18, 0)));
+        tasks.add(new ToDo("buy book"));
+
+        tasks.sort();
+
+        assertEquals("[T][ ] buy book", tasks.getTaskString(1));
+        assertEquals("[T][ ] write notes", tasks.getTaskString(2));
+        assertEquals("[D][ ] earlier deadline (by: Sep 09 2026, 6:00PM)", tasks.getTaskString(3));
+        assertEquals("[D][ ] later deadline (by: Sep 10 2026, 6:00PM)", tasks.getTaskString(4));
+        assertEquals(
+                "[E][ ] earlier event (from: Sep 08 2026, 10:00AM) (to: Sep 08 2026, 11:00AM)",
+                tasks.getTaskString(5));
+        assertEquals(
+                "[E][ ] later event (from: Sep 08 2026, 2:00PM) (to: Sep 08 2026, 3:00PM)",
+                tasks.getTaskString(6));
+    }
     /** Verifies that saved tasks are loaded into a task list. */
     @Test
     public void loadFromStorage_savedTasks_populatesList() throws ZaruException {

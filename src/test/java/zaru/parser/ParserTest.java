@@ -14,6 +14,7 @@ import zaru.command.EventCommand;
 import zaru.command.FindCommand;
 import zaru.command.ListCommand;
 import zaru.command.MarkCommand;
+import zaru.command.SortCommand;
 import zaru.command.TodoCommand;
 import zaru.command.UnmarkCommand;
 import zaru.exception.ZaruException;
@@ -25,6 +26,7 @@ public class ParserTest {
     public void parseMessage_supportedCommands_returnsMatchingCommand() throws ZaruException {
         assertInstanceOf(ByeCommand.class, Parser.parseMessage("bye"));
         assertInstanceOf(ListCommand.class, Parser.parseMessage("list"));
+        assertInstanceOf(SortCommand.class, Parser.parseMessage("sort"));
         assertInstanceOf(MarkCommand.class, Parser.parseMessage("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parseMessage("unmark 1"));
         assertInstanceOf(DeleteCommand.class, Parser.parseMessage("delete 1"));
