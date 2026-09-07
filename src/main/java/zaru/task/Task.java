@@ -1,7 +1,7 @@
 package zaru.task;
 
 /** Stores the common description and completion state of a task. */
-public abstract class Task {
+public abstract class Task implements Comparable<Task> {
     private final String description;
     private boolean isCompleted;
 
@@ -53,5 +53,32 @@ public abstract class Task {
     @Override
     public String toString() {
         return String.format("%s %s", isCompleted ? "[x]" : "[ ]", description);
+    }
+
+    @Override
+    public int compareTo(Task other) {
+        int typeComparison = Integer.compare(getTypePriority(), other.getTypePriority());
+        if (typeComparison != 0) {
+            return typeComparison;
+        }
+
+        return compareWithinType(other);
+    }
+
+    /**
+     * Returns the priority used to group tasks by type when sorting.
+     *
+     * @return Type priority, where a lower value appears first.
+     */
+    protected abstract int getTypePriority();
+
+    /**
+     * Compares two tasks of the same type by their descriptions.
+     *
+     * @param other Other task of the same type.
+     * @return A negative value, zero, or a positive value according to the ordering.
+     */
+    protected int compareWithinType(Task other) {
+        return description.compareToIgnoreCase(other.description);
     }
 }

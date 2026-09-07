@@ -12,6 +12,7 @@ import zaru.command.EventCommand;
 import zaru.command.FindCommand;
 import zaru.command.ListCommand;
 import zaru.command.MarkCommand;
+import zaru.command.SortCommand;
 import zaru.command.TodoCommand;
 import zaru.command.UnmarkCommand;
 import zaru.exception.ZaruException;
@@ -94,6 +95,7 @@ public final class Parser {
         return switch (command) {
             case "bye" -> new ByeCommand();
             case "list" -> new ListCommand();
+            case "sort" -> new SortCommand();
             case "mark" -> new MarkCommand(argument);
             case "unmark" -> new UnmarkCommand(argument);
             case "delete" -> new DeleteCommand(argument);

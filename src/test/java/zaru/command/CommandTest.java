@@ -96,6 +96,17 @@ public class CommandTest {
         assertFalse(response.contains("watch movie"));
     }
 
+    /** Verifies that the sort command sorts tasks and displays their new order. */
+    @Test
+    public void sortCommand_execute_sortsAndDisplaysTasks() throws ZaruException {
+        TaskList tasks = createTaskList("sort.txt");
+        tasks.add(new ToDo("write notes"));
+        tasks.add(new ToDo("buy book"));
+
+        String response = new SortCommand().execute(tasks);
+
+        assertEquals("Here are your sorted tasks:\n1. [T][ ] buy book\n2. [T][ ] write notes", response);
+    }
     /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
