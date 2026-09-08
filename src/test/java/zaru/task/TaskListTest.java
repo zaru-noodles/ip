@@ -1,6 +1,7 @@
 package zaru.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -44,6 +45,41 @@ public class TaskListTest {
 
         tasks.markAsIncomplete(1);
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
+    }
+
+    /** Verifies that tasks with matching type and details are not added twice. */
+    @Test
+    public void add_duplicateTask_throwsException() throws ZaruException {
+        TaskList tasks = createTaskList("duplicates.txt");
+        tasks.add(new ToDo("Read Book"));
+
+        ZaruException exception = assertThrows(ZaruException.class, () -> tasks.add(new ToDo("read book")));
+
+        assertEquals("That task already exists in your list.", exception.getMessage());
+        assertEquals(1, tasks.size());
+    }
+
+    /** Verifies that failed saves roll back every in-memory task-list mutation. */
+    @Test
+    public void mutations_saveFailure_restorePreviousState() throws ZaruException {
+        ControllableStorage storage = new ControllableStorage(temporaryDirectory.resolve("rollback.txt"));
+        TaskList tasks = new TaskList(storage);
+        tasks.add(new ToDo("write notes"));
+        tasks.add(new ToDo("buy book"));
+        storage.setFailing(true);
+
+        assertThrows(ZaruException.class, () -> tasks.add(new ToDo("read book")));
+        assertEquals(2, tasks.size());
+
+        assertThrows(ZaruException.class, () -> tasks.delete(1));
+        assertEquals("[T][ ] write notes", tasks.getTaskString(1));
+
+        assertThrows(ZaruException.class, () -> tasks.markAsComplete(1));
+        assertEquals("[T][ ] write notes", tasks.getTaskString(1));
+
+        assertThrows(ZaruException.class, tasks::sort);
+        assertEquals("[T][ ] write notes", tasks.getTaskString(1));
+        assertEquals("[T][ ] buy book", tasks.getTaskString(2));
     }
 
     /** Verifies that filtering returns tasks whose titles contain the target text. */
@@ -124,5 +160,28 @@ public class TaskListTest {
     /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
+    }
+
+    /** Storage helper whose writes can be disabled to test mutation rollback. */
+    private static class ControllableStorage extends Storage {
+        private boolean isFailing;
+
+        ControllableStorage(Path filePath) {
+            super(filePath);
+        }
+
+        /** Enables or disables simulated save failures. */
+        private void setFailing(boolean isFailing) {
+            this.isFailing = isFailing;
+        }
+
+        @Override
+        public void save(List<Task> tasks) throws ZaruException {
+            if (isFailing) {
+                throw new ZaruException("Simulated save failure.");
+            }
+
+            super.save(tasks);
+        }
     }
 }

@@ -83,6 +83,56 @@ public class CommandTest {
         assertEquals("Please provide a deadline date using /by.", exception.getMessage());
     }
 
+    /** Verifies that an event must end after it starts. */
+    @Test
+    public void eventCommand_nonIncreasingTimeRange_throwsException() {
+        TaskList tasks = createTaskList("invalid-event-range.txt");
+
+        ZaruException sameTimeException = assertThrows(ZaruException.class, () ->
+                new EventCommand("meeting", "2026-08-20 1000", "2026-08-20 1000").execute(tasks));
+        ZaruException reversedTimeException = assertThrows(ZaruException.class, () ->
+                new EventCommand("meeting", "2026-08-20 1100", "2026-08-20 1000").execute(tasks));
+
+        assertEquals("Event start time must be earlier than its end time.", sameTimeException.getMessage());
+        assertEquals("Event start time must be earlier than its end time.", reversedTimeException.getMessage());
+        assertEquals(0, tasks.size());
+    }
+
+    /** Verifies that both event boundary parameters are required. */
+    @Test
+    public void eventCommand_missingEndTime_throwsException() {
+        TaskList tasks = createTaskList("missing-event-end.txt");
+
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                new EventCommand("meeting", "2026-08-20 1000", null).execute(tasks));
+
+        assertEquals("Please provide an event end time using /to.", exception.getMessage());
+        assertEquals(0, tasks.size());
+    }
+
+    /** Verifies that the save-file field separator cannot appear in a task description. */
+    @Test
+    public void todoCommand_reservedCharacter_throwsException() {
+        TaskList tasks = createTaskList("reserved-character.txt");
+
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                new TodoCommand("read | write").execute(tasks));
+
+        assertEquals("Task descriptions cannot contain the reserved | character.", exception.getMessage());
+        assertEquals(0, tasks.size());
+    }
+
+    /** Verifies that a task number containing extra characters is rejected. */
+    @Test
+    public void markCommand_nonNumericTaskNumber_throwsException() throws ZaruException {
+        TaskList tasks = createTaskList("invalid-number.txt");
+        tasks.add(new ToDo("read book"));
+
+        ZaruException exception = assertThrows(ZaruException.class, () -> new MarkCommand("1st").execute(tasks));
+
+        assertEquals("Please provide one whole task number.", exception.getMessage());
+    }
+
     /** Verifies that a find command displays only tasks matching the search text. */
     @Test
     public void findCommand_execute_displaysMatchingTasks() throws ZaruException {

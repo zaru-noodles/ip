@@ -59,4 +59,13 @@ public class DateTimeParserTest {
 
         assertEquals("Please enter dates in yyyy-MM-dd or yyyy-MM-dd HHmm format.", exception.getMessage());
     }
+
+    /** Verifies that a calendar date which does not exist is rejected. */
+    @Test
+    public void parse_nonExistentDate_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                DateTimeParser.parse("2026-02-30 1200"));
+
+        assertEquals("Please enter dates in yyyy-MM-dd or yyyy-MM-dd HHmm format.", exception.getMessage());
+    }
 }

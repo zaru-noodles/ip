@@ -75,6 +75,42 @@ public class StorageTest {
 
         ZaruException exception = assertThrows(ZaruException.class, storage::load);
 
-        assertEquals("Invalid task data in save file!", exception.getMessage());
+        assertEquals("Invalid data on line 1 of the save file: Invalid task data in save file!",
+                exception.getMessage());
+    }
+
+    /** Verifies that duplicate tasks in a save file are treated as corrupt data. */
+    @Test
+    public void load_duplicateTask_throwsException() throws Exception {
+        Path saveFile = temporaryDirectory.resolve("duplicates.txt");
+        Files.writeString(saveFile, "T | 0 | read book\nT | 1 | READ BOOK");
+        Storage storage = new Storage(saveFile);
+
+        ZaruException exception = assertThrows(ZaruException.class, storage::load);
+
+        assertEquals("Invalid data on line 2 of the save file: Duplicate task.", exception.getMessage());
+    }
+
+    /** Verifies that a directory cannot be mistaken for the save file. */
+    @Test
+    public void load_directoryPath_throwsException() {
+        Storage storage = new Storage(temporaryDirectory);
+
+        ZaruException exception = assertThrows(ZaruException.class, storage::load);
+
+        assertEquals("The save-file path is not a regular file: %s".formatted(temporaryDirectory),
+                exception.getMessage());
+    }
+
+    /** Verifies that a directory destination produces a controlled write error. */
+    @Test
+    public void save_directoryPath_throwsException() {
+        Storage storage = new Storage(temporaryDirectory);
+
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                storage.save(List.of(new ToDo("read book"))));
+
+        assertEquals("Unable to write the save file: %s".formatted(temporaryDirectory),
+                exception.getMessage());
     }
 }

@@ -1,8 +1,12 @@
 package zaru.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +54,15 @@ public class ParserTest {
     public void parseMessage_blankInput_exceptionThrown() {
         ZaruException exception = assertThrows(ZaruException.class, () -> Parser.parseMessage("   "));
 
-        assertEquals("Pwease enter a command!", exception.getMessage());
+        assertEquals("Please enter a command!", exception.getMessage());
+    }
+
+    /** Verifies that a missing input reference produces the same safe parser error as blank input. */
+    @Test
+    public void parseMessage_nullInput_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () -> Parser.parseMessage(null));
+
+        assertEquals("Please enter a command!", exception.getMessage());
     }
 
     /** Verifies that a slash argument without a value produces an error. */
@@ -69,5 +81,66 @@ public class ParserTest {
                 Parser.parseMessage("dance"));
 
         assertEquals("Sorry, I don't know what that means ;w;", exception.getMessage());
+    }
+
+    /** Verifies that repeated whitespace around arguments is accepted. */
+    @Test
+    public void parseMessage_repeatedWhitespace_returnsMatchingCommand() throws ZaruException {
+        Command command = Parser.parseMessage("  deadline   submit   report   /by   2026-12-10   1430  ");
+
+        assertInstanceOf(DeadlineCommand.class, command);
+    }
+
+    /** Verifies that a repeated keyed argument is rejected instead of silently overwritten. */
+    @Test
+    public void parseMessage_duplicateKeyedArgument_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                Parser.parseMessage("deadline report /by 2026-12-10 /by 2026-12-11"));
+
+        assertEquals("The /by parameter can only be specified once.", exception.getMessage());
+    }
+
+    /** Verifies that parameters unsupported by a command are rejected. */
+    @Test
+    public void parseMessage_unsupportedKeyedArgument_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () ->
+                Parser.parseMessage("todo read book /by tomorrow"));
+
+        assertEquals("The /by parameter is not valid for the todo command.", exception.getMessage());
+    }
+
+    /** Verifies that commands without positional arguments reject additional text. */
+    @Test
+    public void parseMessage_unexpectedPositionalArgument_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () -> Parser.parseMessage("list now"));
+
+        assertEquals("The list command does not accept additional text.", exception.getMessage());
+    }
+
+    /** Verifies that a trailing slash is reported as an incomplete parameter. */
+    @Test
+    public void parseMessage_trailingSlash_exceptionThrown() {
+        ZaruException exception = assertThrows(ZaruException.class, () -> Parser.parseMessage("todo read book /"));
+
+        assertEquals("Please provide a parameter after /.", exception.getMessage());
+    }
+
+    /** Verifies that each command advertises its own accepted keyed arguments. */
+    @Test
+    public void getAllowedKeyedArguments_commandTypes_returnsOwnedArgumentSets() {
+        assertEquals(Set.of(), new TodoCommand("read book").getAllowedKeyedArguments());
+        assertEquals(Set.of("by"), new DeadlineCommand("report", "2026-12-10").getAllowedKeyedArguments());
+        assertEquals(Set.of("from", "to"),
+                new EventCommand("meeting", "2026-12-10 1000", "2026-12-10 1100")
+                        .getAllowedKeyedArguments());
+    }
+
+    /** Verifies that each command declares whether it accepts a positional argument. */
+    @Test
+    public void acceptsPositionalArgument_commandTypes_returnsOwnedArgumentRules() {
+        assertFalse(new ByeCommand().acceptsPositionalArgument());
+        assertFalse(new ListCommand().acceptsPositionalArgument());
+        assertFalse(new SortCommand().acceptsPositionalArgument());
+        assertTrue(new TodoCommand("read book").acceptsPositionalArgument());
     }
 }
