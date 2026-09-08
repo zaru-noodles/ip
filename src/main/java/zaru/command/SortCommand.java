@@ -15,6 +15,12 @@ public class SortCommand extends Command {
         return "sort";
     }
 
+    /** Returns {@code false} because the {@code sort} command takes no additional text. */
+    @Override
+    public boolean acceptsPositionalArgument() {
+        return false;
+    }
+
     /**
      * Sorts all tasks by type and chronological order.
      *

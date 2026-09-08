@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Locale;
 
 import zaru.exception.ZaruException;
@@ -13,8 +14,10 @@ import zaru.exception.ZaruException;
  * Handles parsing and formatting date-time values used in task commands.
  */
 public final class DateTimeParser {
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+            .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
+            .withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern(
             "MMM dd yyyy, h:mma", Locale.ENGLISH);
 
@@ -31,9 +34,9 @@ public final class DateTimeParser {
         }
 
         try {
-            return LocalDateTime.parse(text, DATE_TIME_FORMAT);
+            return LocalDateTime.parse(text.strip(), DATE_TIME_FORMAT);
         } catch (DateTimeParseException e) {
-            return parseDateOnly(text);
+            return parseDateOnly(text.strip());
         }
     }
 

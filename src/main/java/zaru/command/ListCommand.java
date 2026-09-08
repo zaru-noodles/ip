@@ -14,6 +14,12 @@ public class ListCommand extends Command {
         return "list";
     }
 
+    /** Returns {@code false} because the {@code list} command takes no additional text. */
+    @Override
+    public boolean acceptsPositionalArgument() {
+        return false;
+    }
+
     /**
      * Returns either the empty-list message or all current tasks.
      *

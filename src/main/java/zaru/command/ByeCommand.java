@@ -14,6 +14,12 @@ public class ByeCommand extends Command {
         return "bye";
     }
 
+    /** Returns {@code false} because the {@code bye} command takes no additional text. */
+    @Override
+    public boolean acceptsPositionalArgument() {
+        return false;
+    }
+
     /**
      * Returns the goodbye message.
      *

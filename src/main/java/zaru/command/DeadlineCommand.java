@@ -1,5 +1,7 @@
 package zaru.command;
 
+import java.util.Set;
+
 import zaru.exception.ZaruException;
 import zaru.task.Deadline;
 import zaru.task.TaskList;
@@ -31,6 +33,16 @@ public class DeadlineCommand extends Command {
     }
 
     /**
+     * Returns the slash-prefixed arguments accepted by a deadline command.
+     *
+     * @return A set containing {@code by}.
+     */
+    @Override
+    public Set<String> getAllowedKeyedArguments() {
+        return Set.of("by");
+    }
+
+    /**
      * Validates and adds the deadline task, then returns the response message.
      *
      * @param tasks Current task list.
@@ -39,7 +51,7 @@ public class DeadlineCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        validateNonEmpty(description, "The description of a deadline cannot be empty.");
+        validateDescription(description, "The description of a deadline cannot be empty.");
         validateNonEmpty(dueDate, "Please provide a deadline date using /by.");
         return addTaskAndCreateResponse(tasks, new Deadline(description, dueDate));
     }

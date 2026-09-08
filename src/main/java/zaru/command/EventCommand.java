@@ -1,5 +1,7 @@
 package zaru.command;
 
+import java.util.Set;
+
 import zaru.exception.ZaruException;
 import zaru.task.Event;
 import zaru.task.TaskList;
@@ -34,6 +36,16 @@ public class EventCommand extends Command {
     }
 
     /**
+     * Returns the slash-prefixed arguments accepted by an event command.
+     *
+     * @return A set containing {@code from} and {@code to}.
+     */
+    @Override
+    public Set<String> getAllowedKeyedArguments() {
+        return Set.of("from", "to");
+    }
+
+    /**
      * Validates and adds the event task, then returns the response message.
      *
      * @param tasks Current task list.
@@ -42,7 +54,7 @@ public class EventCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        validateNonEmpty(description, "The description of an event cannot be empty.");
+        validateDescription(description, "The description of an event cannot be empty.");
         validateNonEmpty(from, "Please provide an event start time using /from.");
         validateNonEmpty(to, "Please provide an event end time using /to.");
         return addTaskAndCreateResponse(tasks, new Event(description, from, to));

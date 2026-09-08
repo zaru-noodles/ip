@@ -44,7 +44,7 @@ public class Event extends Task {
      * @param from Event start time.
      * @param to Event end time.
      */
-    public Event(String title, LocalDateTime from, LocalDateTime to) {
+    public Event(String title, LocalDateTime from, LocalDateTime to) throws ZaruException {
         this(title, false, from, to);
     }
 
@@ -55,11 +55,16 @@ public class Event extends Task {
      * @param isCompleted Whether the task is already complete.
      * @param from Event start time.
      * @param to Event end time.
+     * @throws ZaruException If the event does not end after it starts.
      */
-    public Event(String title, boolean isCompleted, LocalDateTime from, LocalDateTime to) {
+    public Event(String title, boolean isCompleted, LocalDateTime from, LocalDateTime to) throws ZaruException {
         super(title, isCompleted);
         assert from != null : "Event start time should have been parsed before construction.";
         assert to != null : "Event end time should have been parsed before construction.";
+
+        if (!from.isBefore(to)) {
+            throw new ZaruException("Event start time must be earlier than its end time.");
+        }
 
         this.from = from;
         this.to = to;
@@ -81,6 +86,22 @@ public class Event extends Task {
      */
     public LocalDateTime getTo() {
         return to;
+    }
+
+    /**
+     * Checks whether another event has the same description, start time, and end time.
+     *
+     * @param other Task to compare against.
+     * @return {@code true} if both events have the same identifying details.
+     */
+    @Override
+    public boolean hasSameDetails(Task other) {
+        if (!super.hasSameDetails(other)) {
+            return false;
+        }
+
+        Event otherEvent = (Event) other;
+        return from.equals(otherEvent.from) && to.equals(otherEvent.to);
     }
 
     @Override
