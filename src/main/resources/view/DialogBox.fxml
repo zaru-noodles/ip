@@ -17,20 +17,19 @@
          stylesheets="@../css/dialog-box.css">
     <children>
         <Label fx:id="dialogLabel"
-               maxWidth="285.0"
                minHeight="-Infinity"
                text="Label"
                wrapText="true" />
         <ImageView fx:id="displayPicture"
-                   fitHeight="70.0"
-                   fitWidth="70.0"
+                   fitHeight="40.0"
+                   fitWidth="40.0"
                    pickOnBounds="true"
                    preserveRatio="true">
             <clip>
-                <Rectangle arcHeight="20.0"
-                           arcWidth="20.0"
-                           height="70.0"
-                           width="70.0" />
+                <Rectangle arcHeight="14.0"
+                           arcWidth="14.0"
+                           height="40.0"
+                           width="40.0" />
             </clip>
         </ImageView>
     </children>
