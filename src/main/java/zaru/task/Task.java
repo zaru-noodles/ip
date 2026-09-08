@@ -46,6 +46,19 @@ public abstract class Task implements Comparable<Task> {
     }
 
     /**
+     * Checks whether another task has the same type and identifying details.
+     * Completion state is intentionally ignored so completing a task does not make it a distinct task.
+     *
+     * @param other Task to compare against.
+     * @return {@code true} if both tasks represent the same task details.
+     */
+    public boolean hasSameDetails(Task other) {
+        return other != null
+                && getClass().equals(other.getClass())
+                && description.equalsIgnoreCase(other.description);
+    }
+
+    /**
      * Returns the common completion marker and task description.
      *
      * @return Formatted task text.

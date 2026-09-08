@@ -33,8 +33,17 @@ public class TaskList {
     public void add(Task task) throws ZaruException {
         assert task != null : "Only constructed tasks should be added.";
 
+        if (tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetails(task))) {
+            throw new ZaruException("That task already exists in your list.");
+        }
+
         tasks.add(task);
-        storage.save(tasks);
+        try {
+            storage.save(tasks);
+        } catch (ZaruException e) {
+            tasks.remove(tasks.size() - 1);
+            throw e;
+        }
     }
 
     /**
@@ -46,8 +55,13 @@ public class TaskList {
     public void delete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
 
-        tasks.remove(index - 1);
-        storage.save(tasks);
+        Task removedTask = tasks.remove(index - 1);
+        try {
+            storage.save(tasks);
+        } catch (ZaruException e) {
+            tasks.add(index - 1, removedTask);
+            throw e;
+        }
     }
 
     /**
@@ -68,8 +82,7 @@ public class TaskList {
     public void markAsComplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
 
-        tasks.get(index - 1).setCompleted(true);
-        storage.save(tasks);
+        updateCompletionState(index, true);
     }
 
     /**
@@ -81,8 +94,7 @@ public class TaskList {
     public void markAsIncomplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
 
-        tasks.get(index - 1).setCompleted(false);
-        storage.save(tasks);
+        updateCompletionState(index, false);
     }
 
     /**
@@ -138,8 +150,35 @@ public class TaskList {
      * @throws ZaruException If the sorted list cannot be saved.
      */
     public void sort() throws ZaruException {
+        List<Task> originalOrder = new ArrayList<>(tasks);
         tasks.sort(null);
-        storage.save(tasks);
+        try {
+            storage.save(tasks);
+        } catch (ZaruException e) {
+            tasks.clear();
+            tasks.addAll(originalOrder);
+            throw e;
+        }
+    }
+
+    /**
+     * Updates a task's completion state and restores it if saving fails.
+     *
+     * @param index One-based task index.
+     * @param isCompleted New completion state.
+     * @throws ZaruException If the updated task list cannot be saved.
+     */
+    private void updateCompletionState(int index, boolean isCompleted) throws ZaruException {
+        Task task = tasks.get(index - 1);
+        boolean wasCompleted = task.isCompleted();
+        task.setCompleted(isCompleted);
+
+        try {
+            storage.save(tasks);
+        } catch (ZaruException e) {
+            task.setCompleted(wasCompleted);
+            throw e;
+        }
     }
 
     /**
