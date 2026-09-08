@@ -18,9 +18,6 @@ public final class DateTimeParser {
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern(
             "MMM dd yyyy, h:mma", Locale.ENGLISH);
 
-    private DateTimeParser() {
-    }
-
     /**
      * Parses user-entered date-time text.
      *

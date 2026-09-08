@@ -58,7 +58,7 @@ public class Storage {
                 if (line.isBlank()) {
                     continue;
                 }
-                tasks.add(fileStringToTask(line));
+                tasks.add(convertLineToTask(line));
             }
         } catch (IOException e) {
             throw new ZaruException("Failed to load tasks from file!");
@@ -126,7 +126,7 @@ public class Storage {
      * @return Task represented by the line.
      * @throws ZaruException If the line does not match the expected save format.
      */
-    private Task fileStringToTask(String line) throws ZaruException {
+    private Task convertLineToTask(String line) throws ZaruException {
         String[] parts = line.split(FIELD_SEPARATOR_REGEX, -1);
         if (parts.length < TODO_PART_COUNT) {
             throw new ZaruException("Invalid task data in save file!");
