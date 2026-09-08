@@ -1,5 +1,7 @@
 package zaru.task;
 
+import zaru.exception.ZaruException;
+
 /** Stores the common description and completion state of a task. */
 public abstract class Task implements Comparable<Task> {
     private final String description;
@@ -41,7 +43,13 @@ public abstract class Task implements Comparable<Task> {
      *
      * @param isCompleted New completion state.
      */
-    public void setCompleted(boolean isCompleted) {
+    public void setCompleted(boolean isCompleted) throws ZaruException {
+        if (isCompleted == this.isCompleted) {
+            if (isCompleted) {
+                throw new ZaruException("This task is already marked as complete.");
+            }
+            throw new ZaruException("This task is already unmarked.");
+        }
         this.isCompleted = isCompleted;
     }
 
