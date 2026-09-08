@@ -36,7 +36,7 @@ public class TodoCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) throws ZaruException {
-        validateNonEmpty(description, "The description of a todo cannot be empty.");
+        validateDescription(description, "The description of a todo cannot be empty.");
         return addTaskAndCreateResponse(tasks, new ToDo(description));
     }
 }

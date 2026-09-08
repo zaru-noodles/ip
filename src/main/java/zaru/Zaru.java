@@ -12,19 +12,31 @@ import zaru.task.TaskList;
 /** Coordinates storage, command parsing, and task operations for the Zaru chatbot. */
 public class Zaru {
     private final TaskList tasks;
+    private final String startupError;
+
+    /** Creates a chatbot instance and loads tasks from the default save file. */
+    public Zaru() {
+        this(Path.of("data", "zaru.txt"));
+    }
 
     /**
-     * Creates a chatbot instance and loads any saved tasks.
+     * Creates a chatbot instance and loads tasks from a specified save file.
+     *
+     * @param saveFile Save file to load and update.
      */
-    public Zaru() {
-        Storage storage = new Storage(Path.of("data", "zaru.txt"));
+    public Zaru(Path saveFile) {
+        Storage storage = new Storage(saveFile);
         tasks = new TaskList(storage);
 
+        String loadingError = null;
         try {
             tasks.loadFromStorage();
         } catch (ZaruException e) {
-            System.out.println("Corrupted save file detected. Reverting to empty list.");
+            loadingError = "Zaru could not load the save file safely.\n%s\n"
+                    .formatted(e.getMessage())
+                    + "Fix the file or its permissions, then restart the app.";
         }
+        startupError = loadingError;
     }
 
     /**
@@ -34,6 +46,10 @@ public class Zaru {
      * @return Response message produced by the command or error handling.
      */
     public Response getResponse(String input) {
+        if (startupError != null) {
+            return new Response(startupError, Response.ResponseType.ERROR, false);
+        }
+
         try {
             Command command = Parser.parseMessage(input);
             String responseText = command.execute(tasks);
