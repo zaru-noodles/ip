@@ -77,10 +77,14 @@ public class TaskList {
      * Marks the one-based task at the given index complete and saves the list.
      *
      * @param index One-based task index.
-     * @throws ZaruException If the updated list cannot be saved.
+     * @throws ZaruException If the task is already complete or the updated list cannot be saved.
      */
     public void markAsComplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
+
+        if (tasks.get(index - 1).isCompleted()) {
+            throw new ZaruException("That task is already marked as done.");
+        }
 
         updateCompletionState(index, true);
     }
@@ -89,10 +93,14 @@ public class TaskList {
      * Marks the one-based task at the given index incomplete and saves the list.
      *
      * @param index One-based task index.
-     * @throws ZaruException If the updated list cannot be saved.
+     * @throws ZaruException If the task is already incomplete or the updated list cannot be saved.
      */
     public void markAsIncomplete(int index) throws ZaruException {
         assert isValidIndex(index) : "Task index should have been validated by the command.";
+
+        if (!tasks.get(index - 1).isCompleted()) {
+            throw new ZaruException("That task is already marked as incomplete.");
+        }
 
         updateCompletionState(index, false);
     }

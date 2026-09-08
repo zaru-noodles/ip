@@ -5,17 +5,39 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import zaru.exception.ZaruException;
+import zaru.storage.Storage;
 
 /** Tests task construction, identity, ordering, and display formatting. */
 public class TaskTest {
     private static final LocalDateTime MORNING = LocalDateTime.of(2026, 9, 8, 9, 0);
     private static final LocalDateTime NOON = LocalDateTime.of(2026, 9, 8, 12, 0);
     private static final LocalDateTime EVENING = LocalDateTime.of(2026, 9, 8, 18, 0);
+
+    @TempDir
+    Path temporaryDirectory;
+
+    /** Verifies that marking an already marked task, and vice versa, produces an exception. */
+    @Test
+    public void updateCompletionState_redundantChange_throwsException() throws ZaruException {
+        TaskList tasks = new TaskList(new Storage(temporaryDirectory.resolve("completion-state.txt")));
+        tasks.add(new ToDo("completed task", true));
+        tasks.add(new ToDo("incomplete task"));
+
+        ZaruException alreadyMarked = assertThrows(ZaruException.class, () -> tasks.markAsComplete(1));
+        ZaruException alreadyUnmarked = assertThrows(ZaruException.class, () -> tasks.markAsIncomplete(2));
+
+        assertEquals("That task is already marked as done.", alreadyMarked.getMessage());
+        assertEquals("That task is already marked as incomplete.", alreadyUnmarked.getMessage());
+        assertTrue(tasks.getTaskString(1).contains("[x]"));
+        assertTrue(tasks.getTaskString(2).contains("[ ]"));
+    }
 
     /** Verifies that todo identity ignores case and completion but respects type and description. */
     @Test
