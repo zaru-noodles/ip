@@ -133,6 +133,100 @@ public class CommandTest {
         assertEquals("Please provide one whole task number.", exception.getMessage());
     }
 
+    /** Verifies command words, default metadata, and exit metadata for every command type. */
+    @Test
+    public void commandMetadata_allCommandTypes_returnsExpectedValues() {
+        assertEquals("bye", new ByeCommand().getCommand());
+        assertEquals("list", new ListCommand().getCommand());
+        assertEquals("sort", new SortCommand().getCommand());
+        assertEquals("mark", new MarkCommand("1").getCommand());
+        assertEquals("unmark", new UnmarkCommand("1").getCommand());
+        assertEquals("delete", new DeleteCommand("1").getCommand());
+        assertEquals("todo", new TodoCommand("read book").getCommand());
+        assertEquals("deadline", new DeadlineCommand("report", "2026-09-08").getCommand());
+        assertEquals("event", new EventCommand("meeting", "2026-09-08 0900", "2026-09-08 1000")
+                .getCommand());
+        assertEquals("find", new FindCommand("book").getCommand());
+        assertTrue(new ByeCommand().isExit());
+        assertFalse(new TodoCommand("read book").isExit());
+    }
+
+    /** Verifies that listing a populated task list includes every numbered task. */
+    @Test
+    public void listCommand_populatedTaskList_returnsTasks() throws ZaruException {
+        TaskList tasks = createTaskList("list-populated.txt");
+        tasks.add(new ToDo("read book"));
+        tasks.add(new ToDo("write notes"));
+
+        String response = new ListCommand().execute(tasks);
+
+        assertEquals("Here are your tasks:\n1. [T][ ] read book\n2. [T][ ] write notes", response);
+    }
+
+    /** Verifies that sorting an empty list returns the empty-list response. */
+    @Test
+    public void sortCommand_emptyTaskList_returnsEmptyMessage() throws ZaruException {
+        TaskList tasks = createTaskList("sort-empty.txt");
+
+        String response = new SortCommand().execute(tasks);
+
+        assertEquals("You have no tasks to sort!", response);
+    }
+
+    /** Verifies all task-number boundary and overflow errors. */
+    @Test
+    public void markCommand_invalidTaskNumber_throwsSpecificException() throws ZaruException {
+        TaskList tasks = createTaskList("invalid-number-boundaries.txt");
+        tasks.add(new ToDo("read book"));
+
+        ZaruException missing = assertThrows(ZaruException.class, () -> new MarkCommand(" ").execute(tasks));
+        ZaruException tooLow = assertThrows(ZaruException.class, () -> new MarkCommand("0").execute(tasks));
+        ZaruException tooHigh = assertThrows(ZaruException.class, () -> new MarkCommand("2").execute(tasks));
+        ZaruException overflow = assertThrows(ZaruException.class, () ->
+                new MarkCommand("999999999999999999999999").execute(tasks));
+
+        assertEquals("Please provide a number.", missing.getMessage());
+        assertEquals("Task number must be between 1 and 1!", tooLow.getMessage());
+        assertEquals("Task number must be between 1 and 1!", tooHigh.getMessage());
+        assertEquals("Number 999999999999999999999999 must be a valid number.", overflow.getMessage());
+    }
+
+    /** Verifies task-description length and control-character restrictions. */
+    @Test
+    public void todoCommand_unsafeDescription_throwsSpecificException() {
+        TaskList tasks = createTaskList("unsafe-description.txt");
+
+        ZaruException tooLong = assertThrows(ZaruException.class, () ->
+                new TodoCommand("a".repeat(501)).execute(tasks));
+        ZaruException controlCharacter = assertThrows(ZaruException.class, () ->
+                new TodoCommand("read\nbook").execute(tasks));
+
+        assertEquals("Task descriptions cannot exceed 500 characters.", tooLong.getMessage());
+        assertEquals("Task descriptions cannot contain line breaks or control characters.",
+                controlCharacter.getMessage());
+    }
+
+    /** Verifies pluralization after adding more than one task. */
+    @Test
+    public void todoCommand_secondTask_usesPluralCount() throws ZaruException {
+        TaskList tasks = createTaskList("plural-count.txt");
+        new TodoCommand("read book").execute(tasks);
+
+        String response = new TodoCommand("write notes").execute(tasks);
+
+        assertTrue(response.endsWith("You now have 2 tasks."));
+    }
+
+    /** Verifies that a find command requires a search target. */
+    @Test
+    public void findCommand_emptyKeyword_throwsException() {
+        TaskList tasks = createTaskList("find-empty.txt");
+
+        ZaruException exception = assertThrows(ZaruException.class, () -> new FindCommand(" ").execute(tasks));
+
+        assertEquals("Include a search target!", exception.getMessage());
+    }
+
     /** Verifies that a find command displays only tasks matching the search text. */
     @Test
     public void findCommand_execute_displaysMatchingTasks() throws ZaruException {
