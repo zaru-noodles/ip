@@ -23,7 +23,7 @@ public class ListCommand extends Command {
     @Override
     public String execute(TaskList tasks) {
         if (tasks.size() == 0) {
-            return "You have no tasks!";
+            return "Your task list is empty. Nothing to pounce on yet!";
         }
 
         return "Here are your tasks:\n%s".formatted(tasks);

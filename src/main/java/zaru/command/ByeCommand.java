@@ -2,7 +2,6 @@ package zaru.command;
 
 import zaru.task.TaskList;
 
-
 /** Executes the {@code bye} command. */
 public class ByeCommand extends Command {
     /**
@@ -23,7 +22,7 @@ public class ByeCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks) {
-        return "Bye. Hope to see you again soon!";
+        return "Bye! I'll be curled up here when you need me.";
     }
 
     /** Returns {@code true} to indicate that this command is an exit command. */

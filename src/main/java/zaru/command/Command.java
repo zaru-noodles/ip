@@ -59,7 +59,7 @@ public abstract class Command {
         tasks.add(task);
         int numberOfTasks = tasks.size();
 
-        return "Oki! Adding this task:\n   %s\nYou now have %d task%s!".formatted(
+        return "Got it! I've tucked this task into your list:\n   %s\nYou now have %d task%s.".formatted(
                 tasks.getTaskString(numberOfTasks),
                 numberOfTasks,
                 numberOfTasks == 1 ? "" : "s");

@@ -25,10 +25,12 @@ public class CommandTest {
     public void todoCommand_execute_addsTask() throws ZaruException {
         TaskList tasks = createTaskList("todo.txt");
 
-        new TodoCommand("read book").execute(tasks);
+        String response = new TodoCommand("read book").execute(tasks);
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] read book", tasks.getTaskString(1));
+        assertEquals("Got it! I've tucked this task into your list:\n   [T][ ] read book\nYou now have 1 task.",
+                response);
     }
 
     /** Verifies that executing a deadline command adds a deadline task. */
@@ -107,6 +109,27 @@ public class CommandTest {
 
         assertEquals("Here are your sorted tasks:\n1. [T][ ] buy book\n2. [T][ ] write notes", response);
     }
+
+    /** Verifies that an empty task list receives Zaru's lightly themed response. */
+    @Test
+    public void listCommand_emptyTaskList_returnsPersonableResponse() {
+        TaskList tasks = createTaskList("empty-list.txt");
+
+        String response = new ListCommand().execute(tasks);
+
+        assertEquals("Your task list is empty. Nothing to pounce on yet!", response);
+    }
+
+    /** Verifies that the exit command receives Zaru's lightly themed farewell. */
+    @Test
+    public void byeCommand_execute_returnsPersonableResponse() {
+        TaskList tasks = createTaskList("bye.txt");
+
+        String response = new ByeCommand().execute(tasks);
+
+        assertEquals("Bye! I'll be curled up here when you need me.", response);
+    }
+
     /** Creates a task list backed by a temporary save file. */
     private TaskList createTaskList(String fileName) {
         return new TaskList(new Storage(temporaryDirectory.resolve(fileName)));
