@@ -1,8 +1,10 @@
 package zaru.storage;
 
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,20 +50,37 @@ public class Storage {
      */
     public List<Task> load() throws ZaruException {
         List<Task> tasks = new ArrayList<>();
-
-        if (!Files.exists(filePath)) {
-            return tasks;
-        }
+        List<String> lines;
 
         try {
-            for (String line : Files.readAllLines(filePath)) {
-                if (line.isBlank()) {
-                    continue;
-                }
-                tasks.add(convertLineToTask(line));
+            if (!Files.exists(filePath)) {
+                return tasks;
             }
-        } catch (IOException e) {
-            throw new ZaruException("Failed to load tasks from file!");
+            if (!Files.isRegularFile(filePath)) {
+                throw new ZaruException("The save-file path is not a regular file: %s".formatted(filePath));
+            }
+
+            lines = Files.readAllLines(filePath);
+        } catch (IOException | SecurityException e) {
+            throw new ZaruException("Unable to read the save file: %s".formatted(filePath));
+        }
+
+        for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++) {
+            String line = lines.get(lineIndex);
+            if (line.isBlank()) {
+                continue;
+            }
+
+            try {
+                Task task = convertLineToTask(line);
+                if (tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetails(task))) {
+                    throw new ZaruException("Duplicate task.");
+                }
+                tasks.add(task);
+            } catch (ZaruException e) {
+                throw new ZaruException("Invalid data on line %d of the save file: %s"
+                        .formatted(lineIndex + 1, e.getMessage()));
+            }
         }
 
         return tasks;
@@ -83,11 +102,52 @@ public class Storage {
             contents.append(taskToFileString(task)).append(System.lineSeparator());
         }
 
+        Path absolutePath = filePath.toAbsolutePath();
+        Path parentDirectory = absolutePath.getParent();
+        Path temporaryFile = null;
+
         try {
-            Files.createDirectories(filePath.getParent());
-            Files.writeString(filePath, contents.toString());
-        } catch (IOException e) {
-            throw new ZaruException("Could not write save file.");
+            if (parentDirectory == null || absolutePath.getFileName() == null) {
+                throw new IOException("Save-file path has no parent directory or file name.");
+            }
+
+            Files.createDirectories(parentDirectory);
+            temporaryFile = Files.createTempFile(parentDirectory, "zaru-save-", ".tmp");
+            Files.writeString(temporaryFile, contents.toString());
+            replaceSaveFile(temporaryFile, absolutePath);
+        } catch (IOException | SecurityException e) {
+            throw new ZaruException("Unable to write the save file: %s".formatted(filePath));
+        } finally {
+            deleteTemporaryFile(temporaryFile);
+        }
+    }
+
+    /**
+     * Replaces the save file atomically where the file system supports it.
+     *
+     * @param temporaryFile Complete temporary save file.
+     * @param destination Final save-file path.
+     * @throws IOException If neither an atomic nor a regular replacement succeeds.
+     */
+    private void replaceSaveFile(Path temporaryFile, Path destination) throws IOException {
+        try {
+            Files.move(temporaryFile, destination,
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryFile, destination, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    /** Deletes a leftover temporary save file without masking the original save result. */
+    private void deleteTemporaryFile(Path temporaryFile) {
+        if (temporaryFile == null) {
+            return;
+        }
+
+        try {
+            Files.deleteIfExists(temporaryFile);
+        } catch (IOException | SecurityException e) {
+            // A later save can safely ignore an orphaned temporary file.
         }
     }
 
@@ -99,6 +159,7 @@ public class Storage {
      * @throws ZaruException If the task type is not supported by the save format.
      */
     private String taskToFileString(Task task) throws ZaruException {
+        validateTitle(task.getDescription());
         String completionMarker = task.isCompleted() ? COMPLETED_MARKER : INCOMPLETE_MARKER;
 
         return switch (task) {
@@ -135,6 +196,7 @@ public class Storage {
         String taskType = parts[0];
         boolean isCompleted = parseCompleted(parts[1]);
         String title = parts[2];
+        validateTitle(title);
 
         return switch (taskType) {
             case TODO_TYPE -> {
@@ -178,6 +240,21 @@ public class Storage {
     private void validatePartCount(String[] parts, int expected) throws ZaruException {
         if (parts.length != expected) {
             throw new ZaruException("Invalid task data in save file!");
+        }
+    }
+
+    /**
+     * Checks whether a task title is safe for the line-based save format.
+     *
+     * @param title Task title to validate.
+     * @throws ZaruException If the title is empty or contains a reserved separator.
+     */
+    private void validateTitle(String title) throws ZaruException {
+        if (title == null || title.isBlank()) {
+            throw new ZaruException("Task description cannot be empty.");
+        }
+        if (title.contains("|")) {
+            throw new ZaruException("Task description contains the reserved | character.");
         }
     }
 }
