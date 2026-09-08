@@ -20,6 +20,8 @@ import zaru.parser.Response;
  * and a label containing text from the speaker.
  */
 public class DialogBox extends HBox {
+    private static final double NON_TEXT_WIDTH = 62;
+
     @FXML
     private Label dialogLabel;
     @FXML
@@ -42,6 +44,7 @@ public class DialogBox extends HBox {
 
         dialogLabel.setText(text);
         displayPicture.setImage(image);
+        dialogLabel.maxWidthProperty().bind(widthProperty().subtract(NON_TEXT_WIDTH));
         assert dialogLabel != null : "Dialog label should have been injected by FXML.";
         assert displayPicture != null : "Display picture should have been injected by FXML.";
     }
@@ -83,6 +86,7 @@ public class DialogBox extends HBox {
         return dialogBox;
     }
 
+    /** Applies visual emphasis appropriate to the response category. */
     private void changeDialogStyle(Response.ResponseType responseType) {
         if (responseType == Response.ResponseType.ERROR) {
             dialogLabel.getStyleClass().add("error-label");
