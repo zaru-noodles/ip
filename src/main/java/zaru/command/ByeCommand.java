@@ -1,6 +1,5 @@
 package zaru.command;
 
-import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
 
@@ -21,10 +20,9 @@ public class ByeCommand extends Command {
      *
      * @param tasks Current task list, unused by this command.
      * @return Goodbye response message.
-     * @throws ZaruException If displaying the command response fails.
      */
     @Override
-    public String execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) {
         return "Bye. Hope to see you again soon!";
     }
 

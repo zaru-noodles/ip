@@ -1,6 +1,5 @@
 package zaru.command;
 
-import zaru.exception.ZaruException;
 import zaru.task.TaskList;
 
 /** Executes the {@code list} command. */
@@ -20,10 +19,9 @@ public class ListCommand extends Command {
      *
      * @param tasks Current task list.
      * @return Task-list response message.
-     * @throws ZaruException If displaying the command response fails.
      */
     @Override
-    public String execute(TaskList tasks) throws ZaruException {
+    public String execute(TaskList tasks) {
         if (tasks.size() == 0) {
             return "You have no tasks!";
         }
